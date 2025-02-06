@@ -4,7 +4,8 @@ import DailyAttendanceReport from './DailyReport';
 import { MonthlyAttendanceReport } from './MonthlyReport';
 import { mockAttendanceData } from '../../../mock/student/mockdata';
 import { getOverallAttendance } from '../../../api/services/Student';
-// import { ScholarNumber } from '../../../types/types';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 async function fetchOverallAttendanceData(scholarNumber) {
     const rawData = await getOverallAttendance(scholarNumber);
@@ -49,8 +50,10 @@ function StudentReport({ scholarNumber }: { scholarNumber }) {
                 try {
                     const data = await fetchOverallAttendanceData(scholarNumber);
                     setOverallData(data);
+                    toast.success("Overall attendance data fetched successfully!");
                 } catch (error) {
                     console.error('Error fetching overall attendance:', error);
+                    toast.error("Error fetching overall attendance data.");
                 }
             })();
         }
@@ -62,8 +65,10 @@ function StudentReport({ scholarNumber }: { scholarNumber }) {
                 try {
                     const data = await fetchDailyAttendanceData();
                     setDailyData(data);
+                    toast.success("Daily attendance data fetched successfully!");
                 } catch (error) {
                     console.error('Error fetching daily attendance:', error);
+                    toast.error("Error fetching daily attendance data.");
                 }
             })();
         }
@@ -75,8 +80,10 @@ function StudentReport({ scholarNumber }: { scholarNumber }) {
                 try {
                     const data = await fetchMonthlyAttendanceData();
                     setMonthlyData(data);
+                    toast.success("Monthly attendance data fetched successfully!");
                 } catch (error) {
                     console.error('Error fetching monthly attendance:', error);
+                    toast.error("Error fetching monthly attendance data.");
                 }
             })();
         }
@@ -118,6 +125,7 @@ function StudentReport({ scholarNumber }: { scholarNumber }) {
                     )}
                 </div>
             </div>
+            <ToastContainer />
         </div>
     );
 }
