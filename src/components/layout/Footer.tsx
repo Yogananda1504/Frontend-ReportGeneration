@@ -104,7 +104,7 @@ const Footer = () => {
         </div>
 
         <div className="pt-4 mt-4 border-t border-gray-700/50 text-center">
-          <p className="text-gray-400 hover:text-white transition-colors duration-200">
+          <p className="text-yellow-400 hover:text-white transition-colors duration-200">
             © {new Date().getFullYear()} MANIT Bhopal. All Rights Reserved | 
             <a href="#" className="ml-1 text-blue-400 hover:text-blue-300 transition-colors duration-200">
               Terms of Use
