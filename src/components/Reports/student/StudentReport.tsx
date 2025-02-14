@@ -5,9 +5,12 @@ import { MonthlyAttendanceReport } from './MonthlyReport';
 import { mockAttendanceData } from '../../../mock/student/mockdata';
 import { getOverallAttendance } from '../../../api/services/Student';
 import { toast, ToastContainer } from 'react-toastify';
+import { StudentInfo } from './StudentInfo';
 import 'react-toastify/dist/ReactToastify.css';
+import { getStudentDetails } from '../../../api/services/Student';
 
 async function fetchOverallAttendanceData(scholarNumber) {
+    let detail;
     const rawData = await getOverallAttendance(scholarNumber);
     const totalClasses = rawData.summary.reduce((acc, item) => acc + item.total, 0);
     const attendedClasses = rawData.summary.reduce((acc, item) => acc + item.present, 0);
@@ -28,6 +31,16 @@ async function fetchOverallAttendanceData(scholarNumber) {
     };
 }
 
+async function fetchStudentDetails(scholarNumber) {
+    try {
+        const detail = await getStudentDetails(scholarNumber);
+        return detail;
+    } catch (error) {
+        console.error('Error fetching student details:', error);
+        toast.error("Error fetching student details.");
+    }
+}
+
 async function fetchDailyAttendanceData() {
     // For now, we're using mock data; replace with actual API call if needed.
     return mockAttendanceData.daily;
@@ -43,6 +56,7 @@ function StudentReport({ scholarNumber }: { scholarNumber }) {
     const [overallData, setOverallData] = useState(null);
     const [dailyData, setDailyData] = useState(null);
     const [monthlyData, setMonthlyData] = useState(null);
+    const [studentDetails, setStudentDetails] = useState(null);
 
     useEffect(() => {
         if (scholarNumber && activeTab === 'overall') {
@@ -89,6 +103,19 @@ function StudentReport({ scholarNumber }: { scholarNumber }) {
         }
     }, [activeTab]);
 
+    useEffect(() => {
+        if (scholarNumber) {
+            (async () => {
+                try {
+                    const details = await fetchStudentDetails(scholarNumber);
+                    setStudentDetails(details);
+                } catch (error) {
+                    console.error('Error fetching student details:', error);
+                }
+            })();
+        }
+    }, [scholarNumber]);
+
     return (
         <div className="min-h-screen bg-gray-100">
             <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
@@ -101,10 +128,9 @@ function StudentReport({ scholarNumber }: { scholarNumber }) {
                                     <button
                                         key={tab}
                                         onClick={() => setActiveTab(tab)}
-                                        className={`${
-                                            activeTab === tab
-                                                ? 'bg-indigo-100 text-indigo-700'
-                                                : 'text-gray-500 hover:text-gray-700'
+                                        className={`${activeTab === tab
+                                            ? 'bg-indigo-100 text-indigo-700'
+                                            : 'text-gray-500 hover:text-gray-700'
                                             } px-3 py-2 font-medium text-sm rounded-md capitalize`}
                                     >
                                         {tab} Report
@@ -112,6 +138,10 @@ function StudentReport({ scholarNumber }: { scholarNumber }) {
                                 ))}
                             </nav>
                         </div>
+                    </div>
+
+                    <div className="max-w-4xl mx-auto">
+                        {studentDetails && <StudentInfo details={studentDetails} />}
                     </div>
 
                     {activeTab === 'overall' && overallData && (
@@ -130,4 +160,4 @@ function StudentReport({ scholarNumber }: { scholarNumber }) {
     );
 }
 
-export default StudentReport
+export default StudentReport;
