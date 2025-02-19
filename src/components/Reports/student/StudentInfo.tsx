@@ -2,7 +2,6 @@ import React from 'react';
 import { UserCircle } from 'lucide-react';
 
 interface StudentDetails {
-
     scholarNumber: string;
     StudentName: string;
     branch: string;

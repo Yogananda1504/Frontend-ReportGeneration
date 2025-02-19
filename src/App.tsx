@@ -3,6 +3,7 @@ import Layout from './components/layout/Layout';
 import Login from './pages/auth/Login';
 import { useAuth } from './hooks/useAuth';
 import Dashboard from './pages/Director/dashboard/Dashboard';
+import { ToastContainer } from 'react-toastify';
 
 
 // The Protected Route component is used to restrict access to certain routes based on the user's role
@@ -25,46 +26,49 @@ function ProtectedRoute({ children, allowedRoles }: { children: React.ReactNode;
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        
-        <Route path="/" element={<Layout />}>
-          {/* Faculty Routes */}
-          <Route
-            path="faculty/dashboard"
-            element={
-              <ProtectedRoute allowedRoles={['FACULTY']}>
-                <div>Faculty Dashboard</div>
-              </ProtectedRoute>
-            }
-          />
+    <>
+      <ToastContainer />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<Login />} />
 
-          {/* HOD Routes */}
-          <Route
-            path="hod/dashboard"
-            element={
-              <ProtectedRoute allowedRoles={['HOD']}>
-                <div>HOD Dashboard</div>
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/" element={<Layout />}>
+            {/* Faculty Routes */}
+            <Route
+              path="faculty/dashboard"
+              element={
+                <ProtectedRoute allowedRoles={['FACULTY']}>
+                  <div>Faculty Dashboard</div>
+                </ProtectedRoute>
+              }
+            />
 
-          {/* Director Routes */}
-          <Route
-            path="director/dashboard"
-            element={
-              <ProtectedRoute allowedRoles={['DIRECTOR']}>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
+            {/* HOD Routes */}
+            <Route
+              path="hod/dashboard"
+              element={
+                <ProtectedRoute allowedRoles={['HOD']}>
+                  <div>HOD Dashboard</div>
+                </ProtectedRoute>
+              }
+            />
 
-          {/* Default redirect */}
-          <Route path="/" element={<Navigate to="/login" replace />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+            {/* Director Routes */}
+            <Route
+              path="director/dashboard"
+              element={
+                <ProtectedRoute allowedRoles={['DIRECTOR']}>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Default redirect */}
+            <Route path="/" element={<Navigate to="/login" replace />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </>
   );
 }
 

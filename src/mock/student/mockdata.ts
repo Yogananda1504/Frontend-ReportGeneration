@@ -249,199 +249,87 @@ const studentDetails = {
   };
   
   // 3. Monthly Attendance Summary
-  const monthlyAttendanceSummary = {
-    studentInfo: { ...studentDetails },
-    academicYear: "2024-25",
-    monthlySummary: [
-      {
-        month: "July 2024",
-        overallSummary: {
-          totalClassesInMonth: 100,
-          totalAttendedClasses: 90,
-          overallMonthlyPercentage: 90.0
-        },
-        subjectWiseAttendance: [
-          {
-            subjectId: "66963f0bb7cadc536c558204",
-            subjectName: "Data Structures",
-            subjectCode: "CS-301",
-            professorName: "Dr. Amit Kumar",
-            totalClasses: 25,
-            attendedClasses: 24,
-            percentage: 96.0,
-            weekWiseBreakdown: [
-              { week: "Week 1", attended: 6, total: 6 },
-              { week: "Week 2", attended: 6, total: 6 },
-              { week: "Week 3", attended: 6, total: 6 },
-              { week: "Week 4", attended: 6, total: 6 },
-              { week: "Week 5", attended: 0, total: 1 }
-            ]
-          },
-          {
-            subjectId: "66963f0bb7cadc536c558205",
-            subjectName: "Database Management",
-            subjectCode: "CS-302",
-            professorName: "Dr. Priya Singh",
-            totalClasses: 25,
-            attendedClasses: 20,
-            percentage: 80.0,
-            weekWiseBreakdown: [
-              { week: "Week 1", attended: 5, total: 6 },
-              { week: "Week 2", attended: 5, total: 6 },
-              { week: "Week 3", attended: 5, total: 6 },
-              { week: "Week 4", attended: 5, total: 6 },
-              { week: "Week 5", attended: 0, total: 1 }
-            ]
-          },
-          {
-            subjectId: "66963f0bb7cadc536c558206",
-            subjectName: "Computer Networks",
-            subjectCode: "CS-303",
-            professorName: "Dr. Rajesh Verma",
-            totalClasses: 25,
-            attendedClasses: 24,
-            percentage: 96.0,
-            weekWiseBreakdown: [
-              { week: "Week 1", attended: 6, total: 6 },
-              { week: "Week 2", attended: 6, total: 6 },
-              { week: "Week 3", attended: 6, total: 6 },
-              { week: "Week 4", attended: 6, total: 6 },
-              { week: "Week 5", attended: 0, total: 1 }
-            ]
-          },
-          {
-            subjectId: "66963f0bb7cadc536c558207",
-            subjectName: "Operating Systems",
-            subjectCode: "CS-304",
-            professorName: "Dr. Sarah Wilson",
-            totalClasses: 25,
-            attendedClasses: 21,
-            percentage: 84.0,
-            weekWiseBreakdown: [
-              { week: "Week 1", attended: 5, total: 6 },
-              { week: "Week 2", attended: 5, total: 6 },
-              { week: "Week 3", attended: 5, total: 6 },
-              { week: "Week 4", attended: 5, total: 6 },
-              { week: "Week 5", attended: 1, total: 1 }
-            ]
-          },
-          {
-            subjectId: "66963f0bb7cadc536c558208",
-            subjectName: "Software Engineering",
-            subjectCode: "CS-305",
-            professorName: "Dr. Mark Allen",
-            totalClasses: 15,
-            attendedClasses: 14,
-            percentage: 93.33,
-            weekWiseBreakdown: [
-              { week: "Week 1", attended: 3, total: 3 },
-              { week: "Week 2", attended: 4, total: 4 },
-              { week: "Week 3", attended: 4, total: 4 },
-              { week: "Week 4", attended: 3, total: 3 }
-            ]
-          },
-          {
-            subjectId: "66963f0bb7cadc536c558209",
-            subjectName: "Artificial Intelligence",
-            subjectCode: "CS-306",
-            professorName: "Dr. Nina Gupta",
-            totalClasses: 15,
-            attendedClasses: 13,
-            percentage: 86.67,
-            weekWiseBreakdown: [
-              { week: "Week 1", attended: 3, total: 3 },
-              { week: "Week 2", attended: 4, total: 4 },
-              { week: "Week 3", attended: 3, total: 4 },
-              { week: "Week 4", attended: 3, total: 4 }
-            ]
-          }
-        ],
-        trends: {
-          bestAttendanceSubject: "Data Structures, Computer Networks",
-          lowestAttendanceSubject: "Database Management, Operating Systems",
-          consecutiveDaysPresent: 6,
-          totalLeaves: 5
-        }
-      },
-      {
-        month: "August 2024",
-        overallSummary: {
-          totalClassesInMonth: 90,
-          totalAttendedClasses: 78,
-          overallMonthlyPercentage: 86.67
-        },
-        subjectWiseAttendance: [
-          {
-            subjectId: "66963f0bb7cadc536c558204",
-            subjectName: "Data Structures",
-            subjectCode: "CS-301",
-            professorName: "Dr. Amit Kumar",
-            totalClasses: 20,
-            attendedClasses: 19,
-            percentage: 95.0,
-            weekWiseBreakdown: [
-              { week: "Week 1", attended: 5, total: 5 },
-              { week: "Week 2", attended: 5, total: 5 },
-              { week: "Week 3", attended: 5, total: 5 },
-              { week: "Week 4", attended: 4, total: 5 }
-            ]
-          },
-          {
-            subjectId: "66963f0bb7cadc536c558205",
-            subjectName: "Database Management",
-            subjectCode: "CS-302",
-            professorName: "Dr. Priya Singh",
-            totalClasses: 20,
-            attendedClasses: 16,
-            percentage: 80.0,
-            weekWiseBreakdown: [
-              { week: "Week 1", attended: 4, total: 5 },
-              { week: "Week 2", attended: 4, total: 5 },
-              { week: "Week 3", attended: 4, total: 5 },
-              { week: "Week 4", attended: 4, total: 5 }
-            ]
-          },
-          {
-            subjectId: "66963f0bb7cadc536c558206",
-            subjectName: "Computer Networks",
-            subjectCode: "CS-303",
-            professorName: "Dr. Rajesh Verma",
-            totalClasses: 20,
-            attendedClasses: 19,
-            percentage: 95.0,
-            weekWiseBreakdown: [
-              { week: "Week 1", attended: 5, total: 5 },
-              { week: "Week 2", attended: 5, total: 5 },
-              { week: "Week 3", attended: 5, total: 5 },
-              { week: "Week 4", attended: 4, total: 5 }
-            ]
-          },
-          {
-            subjectId: "66963f0bb7cadc536c558207",
-            subjectName: "Operating Systems",
-            subjectCode: "CS-304",
-            professorName: "Dr. Sarah Wilson",
-            totalClasses: 20,
-            attendedClasses: 17,
-            percentage: 85.0,
-            weekWiseBreakdown: [
-              { week: "Week 1", attended: 4, total: 5 },
-              { week: "Week 2", attended: 4, total: 5 },
-              { week: "Week 3", attended: 4, total: 5 },
-              { week: "Week 4", attended: 5, total: 5 }
-            ]
-          }
-        ],
-        trends: {
-          bestAttendanceSubject: "Data Structures, Computer Networks",
-          lowestAttendanceSubject: "Database Management, Operating Systems",
-          consecutiveDaysPresent: 5,
-          totalLeaves: 8
-        }
-      }
-      // Additional months can be added here
-    ]
-  };
+  const monthlyAttendanceSummary = [
+    {
+        "totalSessions": 5,
+        "presentCount": 4,
+        "subjectName": "Network & System Securities (T)",
+        "subjectId": "678ce483cd76735183ab8349",
+        "branch": "CSE",
+        "semester": "III",
+        "section": "01",
+        "scholarNo": "2211201152",
+        "month": "2025-02",
+        "attendancePercentage": 80,
+        "subjectCode": "CSE323"
+    },
+    {
+        "totalSessions": 9,
+        "presentCount": 7,
+        "subjectName": "Advanced Data Structures",
+        "subjectId": "678dfa8ad5665f6a3eb3fa67",
+        "branch": "CSE",
+        "semester": "III",
+        "section": "01",
+        "scholarNo": "2211201152",
+        "month": "2025-01",
+        "attendancePercentage": 77.77777777777779,
+        "subjectCode": "CSE357"
+    },
+    {
+        "totalSessions": 3,
+        "presentCount": 3,
+        "subjectName": "Machine Learning",
+        "subjectId": "678ce483cd76735183ab8347",
+        "branch": "CSE",
+        "semester": "III",
+        "section": "01",
+        "scholarNo": "2211201152",
+        "month": "2025-01",
+        "attendancePercentage": 100,
+        "subjectCode": "CSE321"
+    },
+    {
+        "totalSessions": 2,
+        "presentCount": 2,
+        "subjectName": "Advanced Data Structures",
+        "subjectId": "678dfa8ad5665f6a3eb3fa67",
+        "branch": "CSE",
+        "semester": "III",
+        "section": "01",
+        "scholarNo": "2211201152",
+        "month": "2025-02",
+        "attendancePercentage": 100,
+        "subjectCode": "CSE357"
+    },
+    {
+        "totalSessions": 4,
+        "presentCount": 4,
+        "subjectName": "Machine Learning",
+        "subjectId": "678ce483cd76735183ab8347",
+        "branch": "CSE",
+        "semester": "III",
+        "section": "01",
+        "scholarNo": "2211201152",
+        "month": "2025-02",
+        "attendancePercentage": 100,
+        "subjectCode": "CSE321"
+    },
+    {
+        "totalSessions": 9,
+        "presentCount": 6,
+        "subjectName": "Network & System Securities (T)",
+        "subjectId": "678ce483cd76735183ab8349",
+        "branch": "CSE",
+        "semester": "III",
+        "section": "01",
+        "scholarNo": "2211201152",
+        "month": "2025-01",
+        "attendancePercentage": 66.66666666666666,
+        "subjectCode": "CSE323"
+    }
+  ]
+  
   
   // Export the mock data
   export const mockAttendanceData = {

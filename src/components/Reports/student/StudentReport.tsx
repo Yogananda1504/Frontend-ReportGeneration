@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { OverallAttendanceReport } from './OverallReport';
 import DailyAttendanceReport from './DailyReport';
-import { MonthlyAttendanceReport } from './MonthlyReport';
+import MonthlyAttendanceReport from './MonthlyReport';
 import { mockAttendanceData } from '../../../mock/student/mockdata';
-import { getOverallAttendance } from '../../../api/services/Student';
+import { getOverallAttendance, getMonthlyAttendance } from '../../../api/services/Student';
 import { toast, ToastContainer } from 'react-toastify';
 import { StudentInfo } from './StudentInfo';
+import { Download } from 'lucide-react';
 import 'react-toastify/dist/ReactToastify.css';
-import { getStudentDetails } from '../../../api/services/Student';
+import { exportToPNG } from '../../../Utils/ExportPNG';
 
 async function fetchOverallAttendanceData(scholarNumber) {
     let detail;
@@ -31,43 +32,34 @@ async function fetchOverallAttendanceData(scholarNumber) {
     };
 }
 
-async function fetchStudentDetails(scholarNumber) {
-    try {
-        const detail = await getStudentDetails(scholarNumber);
-        return detail;
-    } catch (error) {
-        console.error('Error fetching student details:', error);
-        toast.error("Error fetching student details.");
-    }
-}
-
 async function fetchDailyAttendanceData() {
-    // For now, we're using mock data; replace with actual API call if needed.
     return mockAttendanceData.daily;
 }
 
 async function fetchMonthlyAttendanceData() {
-    // For now, we're using mock data; replace with actual API call if needed.
     return mockAttendanceData.monthly;
 }
 
-function StudentReport({ scholarNumber }: { scholarNumber }) {
+function StudentReport({ scholarNumber, studentDetails }: { scholarNumber: string, studentDetails: any }) {
     const [activeTab, setActiveTab] = useState('overall');
     const [overallData, setOverallData] = useState(null);
     const [dailyData, setDailyData] = useState(null);
     const [monthlyData, setMonthlyData] = useState(null);
-    const [studentDetails, setStudentDetails] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         if (scholarNumber && activeTab === 'overall') {
+            setIsLoading(true);
             (async () => {
                 try {
                     const data = await fetchOverallAttendanceData(scholarNumber);
                     setOverallData(data);
-                    toast.success("Overall attendance data fetched successfully!");
+
                 } catch (error) {
                     console.error('Error fetching overall attendance:', error);
-                    toast.error("Error fetching overall attendance data.");
+
+                } finally {
+                    setIsLoading(false);
                 }
             })();
         }
@@ -75,14 +67,17 @@ function StudentReport({ scholarNumber }: { scholarNumber }) {
 
     useEffect(() => {
         if (activeTab === 'daily') {
+            setIsLoading(true);
             (async () => {
                 try {
-                    const data = await fetchDailyAttendanceData();
+                    const data = await fetchDailyAttendanceData(scholarNumber);
                     setDailyData(data);
-                    toast.success("Daily attendance data fetched successfully!");
+
                 } catch (error) {
                     console.error('Error fetching daily attendance:', error);
-                    toast.error("Error fetching daily attendance data.");
+
+                } finally {
+                    setIsLoading(false);
                 }
             })();
         }
@@ -90,72 +85,101 @@ function StudentReport({ scholarNumber }: { scholarNumber }) {
 
     useEffect(() => {
         if (activeTab === 'monthly') {
+            setIsLoading(true);
             (async () => {
                 try {
-                    const data = await fetchMonthlyAttendanceData();
+                    const data = await getMonthlyAttendance(scholarNumber);
                     setMonthlyData(data);
-                    toast.success("Monthly attendance data fetched successfully!");
+
                 } catch (error) {
                     console.error('Error fetching monthly attendance:', error);
-                    toast.error("Error fetching monthly attendance data.");
-                }
-            })();
-        }
-    }, [activeTab]);
 
-    useEffect(() => {
-        if (scholarNumber) {
-            (async () => {
-                try {
-                    const details = await fetchStudentDetails(scholarNumber);
-                    setStudentDetails(details);
-                } catch (error) {
-                    console.error('Error fetching student details:', error);
+                } finally {
+                    setIsLoading(false);
                 }
             })();
         }
-    }, [scholarNumber]);
+    }, [activeTab, scholarNumber]); // Updated dependency array
 
     return (
-        <div className="min-h-screen bg-gray-100">
-            <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-                <div className="px-4 py-6 sm:px-0">
-                    <div className="mb-6">
-                        <h1 className="text-3xl font-bold text-gray-900">Student Attendance Dashboard</h1>
-                        <div className="mt-4">
-                            <nav className="flex space-x-4" aria-label="Tabs">
-                                {['overall', 'daily', 'monthly'].map((tab) => (
-                                    <button
-                                        key={tab}
-                                        onClick={() => setActiveTab(tab)}
-                                        className={`${activeTab === tab
-                                            ? 'bg-indigo-100 text-indigo-700'
-                                            : 'text-gray-500 hover:text-gray-700'
-                                            } px-3 py-2 font-medium text-sm rounded-md capitalize`}
-                                    >
-                                        {tab} Report
-                                    </button>
-                                ))}
-                            </nav>
+        <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
+            <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+                <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
+                    <div className="flex justify-between items-center mb-8">
+                        <h1 className="text-3xl font-bold text-gray-900 bg-gradient-to-r from-indigo-600 to-blue-500 bg-clip-text text-transparent">
+                            Student Attendance Dashboard
+                        </h1>
+                        <button
+                            onClick={() => exportToPNG('reportToExport', 'student-report.png')}
+                            className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-indigo-600 to-blue-500 text-white rounded-lg hover:from-indigo-500 hover:to-blue-400 transition-all duration-200 shadow-md hover:shadow-lg"
+                        >
+                            <Download className="w-4 h-4 mr-2" />
+                            Export Report
+                        </button>
+                    </div>
+
+                    <nav className="flex space-x-2 bg-white p-1 rounded-lg w-fit" aria-label="Tabs">
+                        {['overall', 'daily', 'monthly'].map((tab) => (
+                            <button
+                                key={tab}
+                                onClick={() => setActiveTab(tab)}
+                                className={`${activeTab === tab
+                                    ? 'bg-white text-indigo-600 shadow-sm'
+                                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                                    } px-6 py-3 font-medium text-sm rounded-md capitalize transition-all duration-200`}
+                            >
+                                {tab} Report
+                            </button>
+                        ))}
+                    </nav>
+
+                    <div id="reportToExport" className="space-y-6">
+                        {studentDetails && (
+                            <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
+                                <StudentInfo details={studentDetails} />
+                            </div>
+                        )}
+
+                        <div className="mt-6">
+                            {isLoading ? (
+                                <div className="flex items-center justify-center h-64">
+                                    <div className="animate-spin rounded-full h-12 w-12 border-4 border-indigo-500 border-t-transparent"></div>
+                                </div>
+                            ) : (
+                                <>
+                                    {activeTab === 'overall' && overallData && (
+                                        <div className="bg-white rounded-lg shadow-sm">
+                                            <OverallAttendanceReport data={overallData} />
+                                        </div>
+                                    )}
+                                    {activeTab === 'daily' && dailyData && (
+                                        <div className="bg-white rounded-lg shadow-sm">
+                                            <DailyAttendanceReport data={dailyData} />
+                                        </div>
+                                    )}
+                                    {activeTab === 'monthly' && monthlyData && (
+                                        <div className="bg-white rounded-lg shadow-sm">
+                                            <MonthlyAttendanceReport data={monthlyData} />
+                                        </div>
+                                    )}
+                                </>
+                            )}
                         </div>
                     </div>
-
-                    <div className="max-w-4xl mx-auto">
-                        {studentDetails && <StudentInfo details={studentDetails} />}
-                    </div>
-
-                    {activeTab === 'overall' && overallData && (
-                        <OverallAttendanceReport data={overallData} />
-                    )}
-                    {activeTab === 'daily' && dailyData && (
-                        <DailyAttendanceReport data={dailyData} />
-                    )}
-                    {activeTab === 'monthly' && monthlyData && (
-                        <MonthlyAttendanceReport data={monthlyData} />
-                    )}
                 </div>
             </div>
-            <ToastContainer />
+            <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
         </div>
     );
 }
