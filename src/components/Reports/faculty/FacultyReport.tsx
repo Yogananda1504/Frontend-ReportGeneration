@@ -6,71 +6,35 @@ import {
     flexRender,
 } from '@tanstack/react-table';
 
-interface ScheduledClass {
-    _id: string;
+interface FacultyRecord {
+    subjectId: string;
     subjectName: string;
+    subjectCode: string;
+    branch: string;
+    semester: string;
+    section: string;
+    course: string;
+    session: string;
     scheduledClasses: number;
-}
-
-interface AttendanceData {
-    total: number;
-    marked: number;
-}
-
-interface FacultyReportData {
-    scheduledClasses: ScheduledClass[];
     totalClasses: number;
-    isMarked: string[];
-    subjectWiseAttendance: Array<[string, AttendanceData]>;
+    isMarked: number;
 }
 
-interface TableRow {
-    _id: string;
-    subjectName: string;
-    scheduledClasses: number;
-    total: number | 'N/A';
-    marked: number | 'N/A';
-}
+const FacultyReport: React.FC<{ data: FacultyRecord[] }> = ({ data }) => {
+    const tableData = React.useMemo(() => data, [data]);
 
-interface FacultyReportProps {
-    data: FacultyReportData;
-}
-
-const FacultyReport: React.FC<FacultyReportProps> = ({ data }) => {
-    const tableData = React.useMemo<TableRow[]>(() =>
-        data.scheduledClasses.map(item => {
-            const attendance = data.subjectWiseAttendance.find(([id]) => id === item._id)?.[1];
-            return {
-                _id: item._id,
-                subjectName: item.subjectName,
-                scheduledClasses: item.scheduledClasses,
-                total: attendance?.total ?? 'N/A',
-                marked: attendance?.marked ?? 'N/A',
-            };
-        }), [data.scheduledClasses, data.subjectWiseAttendance]
-    );
-
-    const columns = React.useMemo<ColumnDef<TableRow>[]>(() => [
-        {
-            header: 'Subject ID',
-            accessorKey: '_id',
-        },
-        {
-            header: 'Subject Name',
-            accessorKey: 'subjectName',
-        },
-        {
-            header: 'Scheduled Classes',
-            accessorKey: 'scheduledClasses',
-        },
-        {
-            header: 'Total Classes',
-            accessorKey: 'total',
-        },
-        {
-            header: 'Marked Classes',
-            accessorKey: 'marked',
-        },
+    const columns = React.useMemo<ColumnDef<FacultyRecord>[]>(() => [
+        { header: 'Subject ID', accessorKey: 'subjectId' },
+        { header: 'Subject Name', accessorKey: 'subjectName' },
+        { header: 'Subject Code', accessorKey: 'subjectCode' },
+        { header: 'Branch', accessorKey: 'branch' },
+        { header: 'Semester', accessorKey: 'semester' },
+        { header: 'Section', accessorKey: 'section' },
+        { header: 'Course', accessorKey: 'course' },
+        { header: 'Session', accessorKey: 'session' },
+        { header: 'Scheduled Classes', accessorKey: 'scheduledClasses' },
+        { header: 'Total Classes', accessorKey: 'totalClasses' },
+        { header: 'Marked Classes', accessorKey: 'isMarked' },
     ], []);
 
     const table = useReactTable({
@@ -82,7 +46,7 @@ const FacultyReport: React.FC<FacultyReportProps> = ({ data }) => {
     return (
         <div className="shadow-md rounded-lg bg-white p-4">
             <h2 className="text-xl font-bold mb-4">Faculty Attendance Report</h2>
-           
+
             <div className="overflow-x-auto">
                 <table className="min-w-full border border-gray-300 rounded-md">
                     <thead className="bg-gray-100">

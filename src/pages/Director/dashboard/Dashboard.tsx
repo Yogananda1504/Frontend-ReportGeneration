@@ -7,8 +7,7 @@ import { getDepartments } from '../../../api/services/director';
 import { DepartmentContext } from '../../../context/DepartmentContext';
 import { FacultyContext } from '../../../context/FacultyContext';
 
-function Dashboard() 
-{
+function Dashboard() {
   const [showStudentReport, setShowStudentReport] = useState(false);
   const [showFacultyReport, setShowFacultyReport] = useState(false);
   const [scholarNumber, setScholarNumber] = useState('');
@@ -72,7 +71,7 @@ function Dashboard()
                 />
               )}
               {showFacultyReport && facultyReportData && (
-                <FacultyReport data={facultyReportData} />
+                <FacultyReport data={facultyReportData.data} />
               )}
             </div>
           </div>
