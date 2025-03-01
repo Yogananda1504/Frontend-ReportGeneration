@@ -71,7 +71,7 @@ function Dashboard() {
                 />
               )}
               {showFacultyReport && facultyReportData && (
-                <FacultyReport data={facultyReportData} />
+                <FacultyReport data={facultyReportData.data} />
               )}
             </div>
           </div>
