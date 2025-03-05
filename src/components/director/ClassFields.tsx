@@ -6,14 +6,21 @@ const ClassFields = () => {
 	const { branches } = useClassContext();
 	const [selectedBranch, setSelectedBranch] = useState('');
 	const [selectedCourse, setSelectedCourse] = useState('');
+	const [isCourseLocked, setIsCourseLocked] = useState(false);
 
 	function handleBranchChange(e: React.ChangeEvent<HTMLSelectElement>) {
 		const branchValue = e.target.value;
 		setSelectedBranch(branchValue);
+
+		// Determine course based on branch selection
 		if (branchValue.toUpperCase().includes('MSC')) {
 			setSelectedCourse('MSc');
-		} else if (branchValue.includes('_')) {
+			setIsCourseLocked(true);
+		} else if (branchValue.includes('_') || branchValue.toUpperCase().includes('MTECH')) {
 			setSelectedCourse('M.Tech');
+			setIsCourseLocked(true);
+		} else {
+			setIsCourseLocked(false);
 		}
 	}
 
@@ -34,8 +41,16 @@ const ClassFields = () => {
 			{/* Course */}
 			{selectedBranch !== 'MGMT' && (
 				<div className="flex flex-col">
-					<label htmlFor="course" className="text-sm font-medium text-gray-700 mb-1">Course</label>
-					<select id="course" value={selectedCourse} onChange={(e) => setSelectedCourse(e.target.value)} className="rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-white p-2 border text-sm">
+					<label htmlFor="course" className="text-sm font-medium text-gray-700 mb-1">
+						Course {isCourseLocked && <span className="text-blue-500 text-xs ml-1">(Fixed based on branch)</span>}
+					</label>
+					<select
+						id="course"
+						value={selectedCourse}
+						onChange={(e) => !isCourseLocked && setSelectedCourse(e.target.value)}
+						disabled={isCourseLocked}
+						className={`rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-white p-2 border text-sm ${isCourseLocked ? 'bg-gray-100' : ''}`}
+					>
 						<option value="">Select Course</option>
 						<option value="MBA">MBA</option>
 						<option value="MCA">MCA</option>
