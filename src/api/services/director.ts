@@ -1,8 +1,13 @@
 import { local } from "../base";
 
 interface Department {
-	_id: string; // This contains the department name (e.g., "CSE", "ECE")
+	_id: string; 
 	count: number;
+}
+
+interface Branches{
+	session:[String];
+	branch:String;
 }
 
 export const getFacultyAttendance = async (
@@ -37,3 +42,9 @@ export const getDepartments = async (): Promise<Department[]> => {
 	console.log("These are the available departments : ", response.data);
 	return response.data;
 };
+
+export const getBranches = async ():Promise<Branches[]>=>{
+	const response = await local.get("/api/director/getBranches");
+	console.log("These are the available branches : ", response.data);
+	return response.data;
+}
