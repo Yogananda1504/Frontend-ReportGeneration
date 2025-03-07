@@ -1,16 +1,15 @@
 import React, { useState, useRef, useCallback, useMemo, useEffect } from 'react';
 import debounce from 'lodash/debounce';
-import { Users, GraduationCap, Archive, ChevronDown, ChevronUp } from 'lucide-react';
+import { Users, GraduationCap, Archive, ChevronDown, ChevronUp, Loader2 } from 'lucide-react';
 import StudentFields from './StudentFields';
 import FacultyFields from './FacultyFields';
 import ClassFields from './ClassFields';
+import { useToast } from '../../context/ToastContext';
 
 export type UserType = 'student' | 'faculty' | 'class' | null;
 
 interface InputSectionProps {
-	// Updated to include semester and section in the onSubmit callback.
 	onSubmit?: (scholarNumber: string, semester: string) => void;
-	// New callback for faculty report submission.
 	onFacultyReport?: (reportData: any) => void;
 	onUserTypeSelected?: (type: UserType) => void;
 }
@@ -19,22 +18,50 @@ const InputSection = ({ onSubmit, onFacultyReport, onUserTypeSelected }: InputSe
 	const [selectedType, setSelectedType] = useState<UserType>(null);
 	const [isCollapsed, setIsCollapsed] = useState(false);
 	const [studentScholarNumber, setStudentScholarNumber] = useState('');
-	// New state for additional details.
 	const [studentSemester, setStudentSemester] = useState('');
-	// Ref for FacultyFields
+	const [isLoading, setIsLoading] = useState(false);
 	const facultyRef = useRef<any>(null);
+	const toast = useToast();
 
-	// Updated: Remove event parameter from submission callback.
 	const handleFormSubmit = useCallback(async () => {
+		if (isLoading) return;
+
 		if (selectedType === 'student') {
-			onSubmit?.(studentScholarNumber, studentSemester);
+			if (!studentScholarNumber.trim()) {
+				toast.showError("Please enter a scholar number", "student-missing-field");
+				return;
+			}
+
+			setIsLoading(true);
+			toast.showInfo("Fetching Student  Details...", "student-report-loading");
+
+			try {
+				await onSubmit?.(studentScholarNumber, studentSemester);
+				toast.showSuccess("Student data loaded successfully", "student-report-success");
+			} catch (error) {
+				toast.showError("Failed to fetch student details", "student-report-error");
+				console.error("Error in student submission:", error);
+			} finally {
+				setIsLoading(false);
+			}
 		} else if (selectedType === 'faculty') {
 			if (facultyRef.current?.submitAttendance) {
-				const report = await facultyRef.current.submitAttendance();
-				onFacultyReport?.(report);
+				setIsLoading(true);
+				try {
+					const report = await facultyRef.current.submitAttendance();
+					if (report) {
+						onFacultyReport?.(report);
+					}
+				} catch (error) {
+					toast.showError("An unexpected error occurred", "faculty-report-unexpected-error");
+					console.error("Error in faculty submission:", error);
+				} finally {
+					// Always reset loading state regardless of success or failure
+					setIsLoading(false);
+				}
 			}
 		}
-	}, [selectedType, studentScholarNumber, studentSemester, onSubmit, onFacultyReport]);
+	}, [selectedType, studentScholarNumber, studentSemester, onSubmit, onFacultyReport, isLoading, toast]);
 
 	const debouncedSubmit = useMemo(() => debounce(handleFormSubmit, 300), [handleFormSubmit]);
 
@@ -43,6 +70,11 @@ const InputSection = ({ onSubmit, onFacultyReport, onUserTypeSelected }: InputSe
 			debouncedSubmit.cancel();
 		};
 	}, [debouncedSubmit]);
+
+	// Reset loading state when switching between user types
+	useEffect(() => {
+		setIsLoading(false);
+	}, [selectedType]);
 
 	return (
 		<div className="bg-white rounded-lg shadow-lg">
@@ -53,7 +85,6 @@ const InputSection = ({ onSubmit, onFacultyReport, onUserTypeSelected }: InputSe
 
 			{!isCollapsed && (
 				<form
-					// Modified inline onSubmit: prevent default then call debounced function.
 					onSubmit={(e) => {
 						e.preventDefault();
 						debouncedSubmit();
@@ -64,10 +95,13 @@ const InputSection = ({ onSubmit, onFacultyReport, onUserTypeSelected }: InputSe
 					<div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
 						<button
 							type="button"
-							onClick={() => setSelectedType('student')}
+							onClick={() => {
+								setSelectedType('student');
+								onUserTypeSelected?.('student');
+							}}
 							className={`flex items-center justify-center p-4 rounded-lg border-2 transition-all ${selectedType === 'student'
-								? 'border-blue-500 bg-blue-50 text-blue-700'
-								: 'border-gray-200 hover:border-blue-200 hover:bg-gray-50'
+									? 'border-blue-500 bg-blue-50 text-blue-700'
+									: 'border-gray-200 hover:border-blue-200 hover:bg-gray-50'
 								}`}
 						>
 							<GraduationCap className="w-6 h-6 mr-2" />
@@ -80,8 +114,8 @@ const InputSection = ({ onSubmit, onFacultyReport, onUserTypeSelected }: InputSe
 								onUserTypeSelected?.('faculty');
 							}}
 							className={`flex items-center justify-center p-4 rounded-lg border-2 transition-all ${selectedType === 'faculty'
-								? 'border-blue-500 bg-blue-50 text-blue-700'
-								: 'border-gray-200 hover:border-blue-200 hover:bg-gray-50'
+									? 'border-blue-500 bg-blue-50 text-blue-700'
+									: 'border-gray-200 hover:border-blue-200 hover:bg-gray-50'
 								}`}
 						>
 							<Users className="w-6 h-6 mr-2" />
@@ -89,10 +123,13 @@ const InputSection = ({ onSubmit, onFacultyReport, onUserTypeSelected }: InputSe
 						</button>
 						<button
 							type="button"
-							onClick={() => setSelectedType('class')}
+							onClick={() => {
+								setSelectedType('class');
+								onUserTypeSelected?.('class');
+							}}
 							className={`flex items-center justify-center p-4 rounded-lg border-2 transition-all ${selectedType === 'class'
-								? 'border-blue-500 bg-blue-50 text-blue-700'
-								: 'border-gray-200 hover:border-blue-200 hover:bg-gray-50'
+									? 'border-blue-500 bg-blue-50 text-blue-700'
+									: 'border-gray-200 hover:border-blue-200 hover:bg-gray-50'
 								}`}
 						>
 							<Archive className="w-6 h-6 mr-2" />
@@ -117,9 +154,16 @@ const InputSection = ({ onSubmit, onFacultyReport, onUserTypeSelected }: InputSe
 						<div className="mt-6">
 							<button
 								type="submit"
-								className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
+								disabled={isLoading}
+								className={`w-full flex items-center justify-center py-2 px-4 rounded-md transition-colors ${isLoading
+										? 'bg-blue-400 cursor-not-allowed'
+										: 'bg-blue-600 hover:bg-blue-700'
+									} text-white`}
 							>
-								Submit
+								{isLoading && (
+									<Loader2 className="w-5 h-5 mr-2 animate-spin" />
+								)}
+								{isLoading ? 'Loading...' : 'Submit'}
 							</button>
 						</div>
 					)}

@@ -10,9 +10,11 @@ export const getOverallAttendance = async (scholarNumber: string) => {
 		const response = await base.post("/api/attendance/attendanceByScholarId", {
 			scholarNumber,
 		});
-		toast.success("Overall attendance data fetched successfully!", {
-			toastId: "overall-success",
-		});
+		// toast.success("Overall attendance data fetched successfully!", {
+		// 	toastId: "overall-success",
+		// 	autoClose: 5000,
+		// 	closeOnClick: true,
+		// });
 		return response.data;
 	} catch (error) {
 		console.error("Error fetching overall attendance:", error);

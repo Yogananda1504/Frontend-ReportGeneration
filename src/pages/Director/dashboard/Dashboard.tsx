@@ -7,6 +7,9 @@ import { getDepartments, getBranches } from '../../../api/services/director';
 import { DepartmentContext } from '../../../context/DepartmentContext';
 import { FacultyContext } from '../../../context/FacultyContext';
 import { ClassContext } from '../../../context/ClassContext';
+import { ToastProvider } from '../../../context/ToastContext';
+import { Loader2 } from 'lucide-react';
+
 interface Branch {
   session: [String];
   branch: String;
@@ -23,6 +26,7 @@ function Dashboard() {
   const [professors, setProfessors] = useState<Professor[]>([]);
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [branches, setBranches] = useState<Branch[]>([]);
+  const [isLoadingReport, setIsLoadingReport] = useState(false);
 
   const handleUserTypeSelected = (type: string | null) => {
     if (type === 'faculty') {
@@ -45,49 +49,69 @@ function Dashboard() {
   }, []);
 
   return (
-    <DepartmentContext.Provider value={{ departments }}>
-      <FacultyContext.Provider value={{ professors, subjects, setProfessors, setSubjects }}>
-        <ClassContext.Provider value={{ branches, setBranches }}>
-          <div className="min-h-screen bg-gray-50">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-              <div className="flex flex-col space-y-8">
-                {/* Input Section */}
-                <InputSection
-                  onSubmit={async (enteredScholarNumber, enteredSemester) => {
-                    setScholarNumber(enteredScholarNumber);
-                    setSemester(enteredSemester);
-                    try {
-                      const details = await getStudentDetails(enteredScholarNumber, enteredSemester);
-                      setStudentDetails(details[0]);
-                      setShowStudentReport(true);
-                      setShowFacultyReport(false);
-                    } catch (error) {
-                      console.error('Error fetching student details:', error);
-                    }
-                  }}
-                  onFacultyReport={(reportData) => {
-                    setFacultyReportData(reportData);
-                    setShowFacultyReport(true);
-                    setShowStudentReport(false);
-                  }}
-                  onUserTypeSelected={handleUserTypeSelected}
-                />
-                {/* Report Section */}
-                {showStudentReport && (
-                  <StudentReport
-                    scholarNumber={scholarNumber}
-                    studentDetails={studentDetails}
+    <ToastProvider>
+      <DepartmentContext.Provider value={{ departments }}>
+        <FacultyContext.Provider value={{ professors, subjects, setProfessors, setSubjects }}>
+          <ClassContext.Provider value={{ branches, setBranches }}>
+            <div className="min-h-screen bg-gray-50">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <div className="flex flex-col space-y-8">
+                  {/* Input Section */}
+                  <InputSection
+                    onSubmit={async (enteredScholarNumber, enteredSemester) => {
+                      setScholarNumber(enteredScholarNumber);
+                      setSemester(enteredSemester);
+                      setIsLoadingReport(true);
+                      try {
+                        const details = await getStudentDetails(enteredScholarNumber, enteredSemester);
+                        setStudentDetails(details[0]);
+                        setShowStudentReport(true);
+                        setShowFacultyReport(false);
+                      } catch (error) {
+                        console.error('Error fetching student details:', error);
+                      } finally {
+                        setIsLoadingReport(false);
+                      }
+                    }}
+                    onFacultyReport={(reportData) => {
+                      setFacultyReportData(reportData);
+                      setShowFacultyReport(true);
+                      setShowStudentReport(false);
+                    }}
+                    onUserTypeSelected={handleUserTypeSelected}
                   />
-                )}
-                {showFacultyReport && facultyReportData && (
-                  <FacultyReport data={facultyReportData.data} />
-                )}
+
+                  {/* Loading State */}
+                  {isLoadingReport && (
+                    <div className="flex justify-center items-center p-12">
+                      <Loader2 className="w-12 h-12 text-blue-600 animate-spin" />
+                      <span className="ml-3 text-lg font-medium text-blue-600">Loading report data...</span>
+                    </div>
+                  )}
+
+                  {/* Report Section */}
+                  {!isLoadingReport && showStudentReport && (
+                    <StudentReport
+                      scholarNumber={scholarNumber}
+                      studentDetails={studentDetails}
+                    />
+                  )}
+                  {!isLoadingReport && showFacultyReport && facultyReportData && (
+                    <FacultyReport
+                      data={facultyReportData.data}
+                      professorName={facultyReportData.professorName}
+                      startDate={facultyReportData.startDate}
+                      endDate={facultyReportData.endDate}
+                      employeeCode={facultyReportData.employeeCode} // Updated prop name
+                    />
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        </ClassContext.Provider>
-      </FacultyContext.Provider>
-    </DepartmentContext.Provider>
+          </ClassContext.Provider>
+        </FacultyContext.Provider>
+      </DepartmentContext.Provider>
+    </ToastProvider>
   );
 }
 

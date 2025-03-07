@@ -5,6 +5,8 @@ import {
     ColumnDef,
     flexRender,
 } from '@tanstack/react-table';
+import { FileSpreadsheet, Calendar, User } from 'lucide-react';
+import { exportToPDF } from '../../../Utils/ExportPDF';
 
 interface FacultyRecord {
     subjectId: string;
@@ -20,21 +22,106 @@ interface FacultyRecord {
     isMarked: number;
 }
 
-const FacultyReport: React.FC<{ data: FacultyRecord[] }> = ({ data }) => {
+interface FacultyReportProps {
+    data: FacultyRecord[];
+    professorName?: string;
+    startDate?: string;
+    endDate?: string;
+    employeeCode?: string; // renamed from empCode
+}
+
+const FacultyReport: React.FC<FacultyReportProps> = ({
+    data,
+    professorName = "Faculty Member",
+    startDate = "All time",
+    endDate = "Present",
+    employeeCode = '0000' // renamed default prop
+}) => {
     const tableData = React.useMemo(() => data, [data]);
 
     const columns = React.useMemo<ColumnDef<FacultyRecord>[]>(() => [
-        { header: 'Subject ID', accessorKey: 'subjectId' },
-        { header: 'Subject Name', accessorKey: 'subjectName' },
-        { header: 'Subject Code', accessorKey: 'subjectCode' },
-        { header: 'Branch', accessorKey: 'branch' },
-        { header: 'Semester', accessorKey: 'semester' },
-        { header: 'Section', accessorKey: 'section' },
-        { header: 'Course', accessorKey: 'course' },
-        { header: 'Session', accessorKey: 'session' },
-        { header: 'Scheduled Classes', accessorKey: 'scheduledClasses' },
-        { header: 'Total Classes', accessorKey: 'totalClasses' },
-        { header: 'Marked Classes', accessorKey: 'isMarked' },
+        {
+            header: 'Subject Details',
+            columns: [
+                {
+                    header: 'Subject Name',
+                    accessorKey: 'subjectName',
+                    cell: (info) => (
+                        <div className="font-medium text-gray-900">{info.getValue() as string}</div>
+                    )
+                },
+                {
+                    header: 'Subject Code',
+                    accessorKey: 'subjectCode',
+                    cell: (info) => (
+                        <div className="text-sm text-gray-600">{info.getValue() as string}</div>
+                    )
+                },
+            ]
+        },
+        {
+            header: 'Class Information',
+            columns: [
+                {
+                    header: 'Branch',
+                    accessorKey: 'branch',
+                    cell: (info) => (
+                        <div className="text-sm font-medium text-gray-700">{info.getValue() as string}</div>
+                    )
+                },
+                {
+                    header: 'Semester',
+                    accessorKey: 'semester',
+                    cell: (info) => (
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                            {info.getValue() as string}
+                        </span>
+                    )
+                },
+                {
+                    header: 'Section',
+                    accessorKey: 'section',
+                    cell: (info) => (
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                            {info.getValue() as string}
+                        </span>
+                    )
+                },
+            ]
+        },
+        {
+            header: 'Attendance Statistics',
+            columns: [
+                {
+                    header: 'Scheduled',
+                    accessorKey: 'scheduledClasses',
+                    cell: (info) => (
+                        <div className="text-center font-semibold text-gray-900">
+                            {info.getValue() as number}
+                        </div>
+                    )
+                },
+                {
+                    header: 'Total',
+                    accessorKey: 'totalClasses',
+                    cell: (info) => (
+                        <div className="text-center font-semibold text-gray-900">
+                            {info.getValue() as number}
+                        </div>
+                    )
+                },
+                {
+                    header: 'Marked',
+                    accessorKey: 'isMarked',
+                    cell: (info) => {
+                        const value = info.getValue() as number;
+                        return (
+                            <span className="text-sm font-medium text-gray-900">{value}</span>
+                        );
+                    }
+                },
+            ]
+        },
     ], []);
 
     const table = useReactTable({
@@ -44,44 +131,96 @@ const FacultyReport: React.FC<{ data: FacultyRecord[] }> = ({ data }) => {
     });
 
     return (
-        <div className="shadow-md rounded-lg bg-white p-4">
-            <h2 className="text-xl font-bold mb-4">Faculty Attendance Report</h2>
+        <div id="facultyReport" className="bg-white rounded-xl shadow-lg overflow-hidden">
+            {/* Header Section */}
+            <div className="bg-gradient-to-r from-blue-600 to-blue-800 px-6 py-4 flex items-center justify-between">
+                <div>
+                    <h2 className="text-2xl font-bold text-white flex items-center">
+                        <FileSpreadsheet className="w-6 h-6 mr-2" />
+                        Faculty Attendance Report
+                    </h2>
+                    <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="flex items-center text-blue-100">
+                            <User className="w-5 h-5 mr-2" />
+                            <span className="font-medium">{professorName}</span>
+                        </div>
+                        <div className="flex items-center text-blue-100">
+                            <Calendar className="w-5 h-5 mr-2" />
+                            <span>{startDate} to {endDate}</span>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <button
+                        onClick={() => exportToPDF('facultyReport', `FacultyReport-${professorName}.pdf`)} // updated file name template
+                        className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+                    >
+                        Export PDF
+                    </button>
+                </div>
+            </div>
 
+            {/* Table Section */}
             <div className="overflow-x-auto">
-                <table className="min-w-full border border-gray-300 rounded-md">
-                    <thead className="bg-gray-100">
-                        {table.getHeaderGroups().map(headerGroup => (
-                            <tr key={headerGroup.id}>
-                                {headerGroup.headers.map(header => (
-                                    <th key={header.id} className="px-4 py-2 border border-gray-300 text-left font-semibold">
-                                        {header.isPlaceholder ? null :
-                                            flexRender(
-                                                header.column.columnDef.header,
-                                                header.getContext()
-                                            )}
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
-                    </thead>
-                    <tbody>
-                        {table.getRowModel().rows.map(row => (
-                            <tr key={row.id} className="hover:bg-gray-50 transition-colors">
-                                {row.getVisibleCells().map(cell => (
-                                    <td key={cell.id} className="px-4 py-2 border border-gray-300">
-                                        {flexRender(
-                                            cell.column.columnDef.cell,
-                                            cell.getContext()
-                                        )}
+                <div className="inline-block min-w-full align-middle">
+                    <table className="min-w-full divide-y divide-gray-200">
+                        <thead>
+                            {table.getHeaderGroups().map(headerGroup => (
+                                <tr
+                                    key={headerGroup.id}
+                                    className="divide-x divide-gray-200"
+                                >
+                                    {headerGroup.headers.map(header => (
+                                        <th
+                                            key={header.id}
+                                            colSpan={header.colSpan}
+                                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
+                                        >
+                                            {header.isPlaceholder ? null :
+                                                flexRender(header.column.columnDef.header, header.getContext())
+                                            }
+                                        </th>
+                                    ))}
+                                </tr>
+                            ))}
+                        </thead>
+                        <tbody className="bg-white divide-y divide-gray-200">
+                            {table.getRowModel().rows.length > 0 ? (
+                                table.getRowModel().rows.map((row, i) => (
+                                    <tr
+                                        key={row.id}
+                                        className={`${i % 2 === 0 ? 'bg-white' : 'bg-gray-50'} divide-x divide-gray-200`}
+                                    >
+                                        {row.getVisibleCells().map(cell => (
+                                            <td
+                                                key={cell.id}
+                                                className="px-6 py-4 whitespace-nowrap"
+                                            >
+                                                {flexRender(
+                                                    cell.column.columnDef.cell,
+                                                    cell.getContext()
+                                                )}
+                                            </td>
+                                        ))}
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td
+                                        colSpan={columns.length}
+                                        className="px-6 py-8 text-center text-gray-500 bg-gray-50"
+                                    >
+                                        No attendance data available for the selected time period
                                     </td>
-                                ))}
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     );
 };
 
 export default FacultyReport;
+

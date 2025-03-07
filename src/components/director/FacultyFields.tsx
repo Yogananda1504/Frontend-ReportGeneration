@@ -2,6 +2,7 @@ import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'rea
 import { getDepartments, getFacultyAttendance } from "../../api/services/director";
 import { getProfessorsByDepartment, getSubjectsByProfessor } from "../../api/services/Common";
 import { useFacultyContext } from '../../context/FacultyContext';
+import { useToast } from '../../context/ToastContext';
 import { UserRound, Building2, BookOpen, Loader2, HelpCircle, Calendar, CalendarRange } from 'lucide-react';
 
 interface Professor {
@@ -101,6 +102,8 @@ const FacultyFields = forwardRef((props, ref) => {
   const [loadingSubjects, setLoadingSubjects] = useState(false);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const toast = useToast();
 
   useEffect(() => {
     const fetchDepartments = async () => {
@@ -184,27 +187,44 @@ const FacultyFields = forwardRef((props, ref) => {
       employeeCode = selectedProfessor;
     }
     if (!employeeCode) {
-      console.error("Employee code is required.");
-      return;
+      toast.showError("Employee code is required", "faculty-missing-code");
+      return null;
     }
-    const start = startDate ? new Date(startDate) : null; // modified: pass null if start date is not provided
+
+    setIsSubmitting(true);
+    toast.showInfo("Fetching faculty attendance data...", "faculty-report-loading");
+
+    const start = startDate ? new Date(startDate) : null;
     const end = endDate ? new Date(endDate) : new Date();
     const subjectParam =
       selectionMethod === 'department' && selectedSubject && selectedSubject !== "ALL"
         ? selectedSubject
         : undefined;
+
     try {
       const attendance = await getFacultyAttendance(employeeCode, start, end, subjectParam);
-      console.log("Attendance details:", attendance);
-      return attendance; // Return the attendance data
+      toast.showSuccess("Faculty attendance data loaded successfully", "faculty-report-success");
+      return {
+        ...attendance,
+        employeeCode, // <-- Added employeeCode property
+        professorName: selectionMethod === 'department' ?
+          professors.find((prof: Professor) => prof.employeeCode === employeeCode)?.name :
+          "Faculty Member",
+        startDate: start ? start.toLocaleDateString() : "All time",
+        endDate: end.toLocaleDateString()
+      };
     } catch (err) {
       console.error("Error getting attendance:", err);
+      toast.showError("Failed to fetch faculty attendance data", "faculty-report-error");
       return null;
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   useImperativeHandle(ref, () => ({
-    submitAttendance: handleSubmit
+    submitAttendance: handleSubmit,
+    isSubmitting
   }));
 
   const SelectField = ({ id, label, value, onChange, options, loading, disabled, icon: Icon, tooltip }: any) => (

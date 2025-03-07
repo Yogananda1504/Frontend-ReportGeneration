@@ -111,8 +111,7 @@ function StudentReport({ scholarNumber, studentDetails }: { scholarNumber: strin
                             Student Attendance Dashboard
                         </h1>
                         <button
-                            onClick={() => exportToPDF('reportToExport', `student-report-${scholarNumber}.pdf`)}
-
+                            onClick={() => exportToPDF('reportToExport', `student-${activeTab}-report-${scholarNumber}.pdf`)}
                             className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-indigo-600 to-blue-500 text-white rounded-lg hover:from-indigo-500 hover:to-blue-400 transition-all duration-200 shadow-md hover:shadow-lg"
                         >
                             <Download className="w-4 h-4 mr-2" />
