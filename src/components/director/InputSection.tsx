@@ -121,7 +121,7 @@ const InputSection = ({ onSubmit, onFacultyReport, onUserTypeSelected }: InputSe
 							<Users className="w-6 h-6 mr-2" />
 							<span className="font-medium">Faculty</span>
 						</button>
-						<button
+						{/* <button
 							type="button"
 							onClick={() => {
 								setSelectedType('class');
@@ -134,7 +134,7 @@ const InputSection = ({ onSubmit, onFacultyReport, onUserTypeSelected }: InputSe
 						>
 							<Archive className="w-6 h-6 mr-2" />
 							<span className="font-medium">Class</span>
-						</button>
+						</button> */}
 					</div>
 
 					{/* Dynamic Form Fields */}
