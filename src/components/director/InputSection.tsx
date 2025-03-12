@@ -12,9 +12,10 @@ interface InputSectionProps {
 	onSubmit?: (scholarNumber: string, semester: string) => void;
 	onFacultyReport?: (reportData: any) => void;
 	onUserTypeSelected?: (type: UserType) => void;
+	onFacultyReportLoadStart?: () => void;
 }
 
-const InputSection = ({ onSubmit, onFacultyReport, onUserTypeSelected }: InputSectionProps) => {
+const InputSection = ({ onSubmit, onFacultyReport, onUserTypeSelected, onFacultyReportLoadStart }: InputSectionProps) => {
 	const [selectedType, setSelectedType] = useState<UserType>(null);
 	const [isCollapsed, setIsCollapsed] = useState(false);
 	const [studentScholarNumber, setStudentScholarNumber] = useState('');
@@ -45,23 +46,22 @@ const InputSection = ({ onSubmit, onFacultyReport, onUserTypeSelected }: InputSe
 				setIsLoading(false);
 			}
 		} else if (selectedType === 'faculty') {
-			if (facultyRef.current?.submitAttendance) {
-				setIsLoading(true);
-				try {
-					const report = await facultyRef.current.submitAttendance();
-					if (report) {
-						onFacultyReport?.(report);
-					}
-				} catch (error) {
-					toast.showError("An unexpected error occurred", "faculty-report-unexpected-error");
-					console.error("Error in faculty submission:", error);
-				} finally {
-					// Always reset loading state regardless of success or failure
-					setIsLoading(false);
+			onFacultyReportLoadStart?.(); // Reset faculty report
+			setIsLoading(true);
+			try {
+				const report = await facultyRef.current.submitAttendance();
+				if (report) {
+					onFacultyReport?.(report);
 				}
+			} catch (error) {
+				toast.showError("An unexpected error occurred", "faculty-report-unexpected-error");
+				console.error("Error in faculty submission:", error);
+			} finally {
+				// Always reset loading state regardless of success or failure
+				setIsLoading(false);
 			}
 		}
-	}, [selectedType, studentScholarNumber, studentSemester, onSubmit, onFacultyReport, isLoading, toast]);
+	}, [selectedType, studentScholarNumber, studentSemester, onSubmit, onFacultyReport, isLoading, toast, onFacultyReportLoadStart]);
 
 	const debouncedSubmit = useMemo(() => debounce(handleFormSubmit, 300), [handleFormSubmit]);
 
@@ -100,8 +100,8 @@ const InputSection = ({ onSubmit, onFacultyReport, onUserTypeSelected }: InputSe
 								onUserTypeSelected?.('student');
 							}}
 							className={`flex items-center justify-center p-4 rounded-lg border-2 transition-all ${selectedType === 'student'
-									? 'border-blue-500 bg-blue-50 text-blue-700'
-									: 'border-gray-200 hover:border-blue-200 hover:bg-gray-50'
+								? 'border-blue-500 bg-blue-50 text-blue-700'
+								: 'border-gray-200 hover:border-blue-200 hover:bg-gray-50'
 								}`}
 						>
 							<GraduationCap className="w-6 h-6 mr-2" />
@@ -114,8 +114,8 @@ const InputSection = ({ onSubmit, onFacultyReport, onUserTypeSelected }: InputSe
 								onUserTypeSelected?.('faculty');
 							}}
 							className={`flex items-center justify-center p-4 rounded-lg border-2 transition-all ${selectedType === 'faculty'
-									? 'border-blue-500 bg-blue-50 text-blue-700'
-									: 'border-gray-200 hover:border-blue-200 hover:bg-gray-50'
+								? 'border-blue-500 bg-blue-50 text-blue-700'
+								: 'border-gray-200 hover:border-blue-200 hover:bg-gray-50'
 								}`}
 						>
 							<Users className="w-6 h-6 mr-2" />
@@ -156,8 +156,8 @@ const InputSection = ({ onSubmit, onFacultyReport, onUserTypeSelected }: InputSe
 								type="submit"
 								disabled={isLoading}
 								className={`w-full flex items-center justify-center py-2 px-4 rounded-md transition-colors ${isLoading
-										? 'bg-blue-400 cursor-not-allowed'
-										: 'bg-blue-600 hover:bg-blue-700'
+									? 'bg-blue-400 cursor-not-allowed'
+									: 'bg-blue-600 hover:bg-blue-700'
 									} text-white`}
 							>
 								{isLoading && (

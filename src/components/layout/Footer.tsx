@@ -12,9 +12,9 @@ const Footer = () => {
   return (
     <footer className="bg-gradient-to-b from-black to-[#1a1a1a] text-white pt-12 pb-4 text-sm relative">
       <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-50"></div>
-      
+
       <div className="container mx-auto px-4 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12 mb-8">
           <div className="transform hover:scale-105 transition-transform duration-300">
             <h2 className="text-xl font-bold mb-4 text-blue-400 tracking-wide">
               CONTACT US
@@ -62,7 +62,7 @@ const Footer = () => {
             </div>
           </div>
 
-          <div className="text-center md:text-left">
+          <div className="transform hover:scale-105 transition-transform duration-300">
             <h2 className="text-xl font-bold mb-4 text-blue-400 tracking-wide">
               FOLLOW US
             </h2>
@@ -101,14 +101,26 @@ const Footer = () => {
               </a>
             </div>
           </div>
+
+          <div className="transform hover:scale-105 transition-transform duration-300">
+            <h2 className="text-xl font-bold mb-4 text-blue-400 tracking-wide">
+              COLLABORATORS
+            </h2>
+            <div className="space-y-3 text-gray-300 hover:text-white transition-colors duration-200">
+              <p>Rakesh Kundan(MANIT'25)</p>
+              <p>V.Yogananda Reddy (MANIT'26)</p>
+              <p>Palak Agrawal (MANIT'26)</p>
+              <p>Pranjal Jain (MANIT'26)</p>
+            </div>
+          </div>
         </div>
 
         <div className="pt-4 mt-4 border-t border-gray-700/50 text-center">
           <p className="text-yellow-400 hover:text-white transition-colors duration-200">
-            © {new Date().getFullYear()} MANIT Bhopal. All Rights Reserved | 
+            © {new Date().getFullYear()} MANIT Bhopal. All Rights Reserved |
             <a href="#" className="ml-1 text-blue-400 hover:text-blue-300 transition-colors duration-200">
               Terms of Use
-            </a> and 
+            </a> and
             <a href="#" className="ml-1 text-blue-400 hover:text-blue-300 transition-colors duration-200">
               Privacy Policy
             </a>

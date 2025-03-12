@@ -20,6 +20,7 @@ interface FacultyRecord {
     scheduledClasses: number;
     totalClasses: number;
     isMarked: number;
+    unmarkedDates: string[];
 }
 
 interface FacultyReportProps {
@@ -38,6 +39,9 @@ const FacultyReport: React.FC<FacultyReportProps> = ({
     employeeCode = '0000' // renamed default prop
 }) => {
     const tableData = React.useMemo(() => data, [data]);
+
+    const [showModal, setShowModal] = React.useState(false);
+    const [selectedUnmarked, setSelectedUnmarked] = React.useState<string[]>([]);
 
     const columns = React.useMemo<ColumnDef<FacultyRecord>[]>(() => [
         {
@@ -120,6 +124,24 @@ const FacultyReport: React.FC<FacultyReportProps> = ({
                         );
                     }
                 },
+                {
+                    header: 'Unmarked',
+                    accessorKey: 'unmarkedDates',
+                    cell: (info) => {
+                        const { unmarkedDates } = info.row.original;
+                        return (
+                            <button
+                                onClick={() => {
+                                    setSelectedUnmarked(unmarkedDates);
+                                    setShowModal(true);
+                                }}
+                                className="text-sm font-medium text-blue-600 underline"
+                            >
+                                {unmarkedDates.length}
+                            </button>
+                        );
+                    }
+                },
             ]
         },
     ], []);
@@ -136,7 +158,7 @@ const FacultyReport: React.FC<FacultyReportProps> = ({
             <div className="bg-gradient-to-r from-blue-600 to-blue-800 px-6 py-4 flex items-center justify-between">
                 <div>
                     <h2 className="text-2xl font-bold text-white flex items-center">
-                        <FileSpreadsheet className="w-6 h-6 mr-2" />
+                        <FileSpreadsheet className="w-6 h-6 mr-2" />.''
                         Faculty Attendance Report
                     </h2>
                     <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -218,6 +240,29 @@ const FacultyReport: React.FC<FacultyReportProps> = ({
                     </table>
                 </div>
             </div>
+
+            {showModal && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
+                    <div className="bg-white p-4 rounded shadow-lg max-w-md w-full">
+                        <h2 className="text-lg font-bold mb-2">Unmarked Dates</h2>
+                        {selectedUnmarked.length ? (
+                            <ul className="list-disc list-inside">
+                                {selectedUnmarked.map((date, idx) => (
+                                    <li key={idx}>{date}</li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p>No unmarked dates available.</p>
+                        )}
+                        <button
+                            onClick={() => setShowModal(false)}
+                            className="mt-4 bg-gray-300 px-4 py-2 rounded"
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

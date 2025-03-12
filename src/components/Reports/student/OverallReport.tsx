@@ -5,7 +5,7 @@ import { useReactTable, createColumnHelper, getCoreRowModel, flexRender } from '
 
 type SubjectData = {
   subjectName: string;
-  subjectCode: string;a
+  subjectCode: string;
   professorName: string;
   totalClasses: number;
   attendedClasses: number;
@@ -14,14 +14,33 @@ type SubjectData = {
 
 const columnHelper = createColumnHelper<SubjectData>();
 
+const SubjectCodeCell = ({ code, name }: { code: string; name: string }) => {
+  return (
+    <div className="group relative inline-block">
+      <span className="font-medium">{code}</span>
+      <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 hidden group-hover:block min-w-[200px] z-10">
+        <div className="relative">
+          <div className="bg-gray-900 text-white text-sm rounded-lg py-2 px-3 transform transition-all duration-200 ease-out scale-95 opacity-0 group-hover:scale-100 group-hover:opacity-100">
+            {name}
+            <div className="absolute left-0 top-1/2 transform -translate-x-full -translate-y-1/2">
+              <div className="border-8 border-transparent border-r-gray-900"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const columns = [
-  columnHelper.accessor('subjectName', {
-    header: 'Subject',
-    cell: info => info.getValue(),
-  }),
   columnHelper.accessor('subjectCode', {
     header: 'Code',
-    cell: info => info.getValue(),
+    cell: info => (
+      <SubjectCodeCell 
+        code={info.getValue()} 
+        name={info.row.original.subjectName} 
+      />
+    ),
   }),
   columnHelper.accessor('professorName', {
     header: 'Professor',
@@ -68,7 +87,7 @@ export const OverallAttendanceReport = ({ data }) => {
   return (
     <div className="p-6 bg-white rounded-lg shadow-lg">
       <h2 className="text-2xl font-bold mb-6">Overall Attendance Report</h2>
-      
+
       <div className="mb-8">
         <div className="bg-blue-50 p-4 rounded-lg">
           <h3 className="text-lg font-semibold mb-2">Semester Summary</h3>
@@ -144,3 +163,5 @@ export const OverallAttendanceReport = ({ data }) => {
     </div>
   );
 };
+
+export default OverallAttendanceReport;

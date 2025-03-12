@@ -24,10 +24,48 @@ type AttendanceRecord = {
   month: string;
   attendancePercentage: number;
   subjectCode: string;
+  facultyName: string;
+  facultyCode: string;
 };
 
 interface MonthlyAttendanceReportProps {
   data: AttendanceRecord[];
+}
+
+function SubjectCodeCell({ code, name }: { code: string; name: string }) {
+  return (
+    <div className="group relative inline-block">
+      <span className="font-medium">{code}</span>
+      <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 hidden group-hover:block min-w-[200px] z-10">
+        <div className="relative">
+          <div className="bg-gray-900 text-white text-sm rounded-lg py-2 px-3 transform transition-all duration-200 ease-out scale-95 opacity-0 group-hover:scale-100 group-hover:opacity-100">
+            {name}
+            <div className="absolute left-0 top-1/2 transform -translate-x-full -translate-y-1/2">
+              <div className="border-8 border-transparent border-r-gray-900"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function FacultyCell({ code, name }: { code: string; name: string }) {
+  return (
+    <div className="group relative inline-block">
+      <span className="font-medium">{code}</span>
+      <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 hidden group-hover:block min-w-[200px] z-10">
+        <div className="relative">
+          <div className="bg-gray-900 text-white text-sm rounded-lg py-2 px-3 transform transition-all duration-200 ease-out scale-95 opacity-0 group-hover:scale-100 group-hover:opacity-100">
+            {name}
+            <div className="absolute left-0 top-1/2 transform -translate-x-full -translate-y-1/2">
+              <div className="border-8 border-transparent border-r-gray-900"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function MonthlyAttendanceReport({ data }: MonthlyAttendanceReportProps) {
@@ -69,13 +107,13 @@ function MonthlyAttendanceReport({ data }: MonthlyAttendanceReportProps) {
                     <thead className="bg-gray-50">
                       <tr>
                         <th scope="col" className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs sm:text-sm font-medium text-gray-500 uppercase tracking-wider">
-                          Subject
-                        </th>
-                        <th scope="col" className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs sm:text-sm font-medium text-gray-500 uppercase tracking-wider">
                           Code
                         </th>
                         <th scope="col" className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs sm:text-sm font-medium text-gray-500 uppercase tracking-wider">
-                          Sessions
+                          Faculty
+                        </th>
+                        <th scope="col" className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs sm:text-sm font-medium text-gray-500 uppercase tracking-wider">
+                          Attedance Filled
                         </th>
                         <th scope="col" className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs sm:text-sm font-medium text-gray-500 uppercase tracking-wider">
                           Present
@@ -88,11 +126,11 @@ function MonthlyAttendanceReport({ data }: MonthlyAttendanceReportProps) {
                     <tbody className="bg-white divide-y divide-gray-200">
                       {subjects.map((subject) => (
                         <tr key={subject.subjectId} className="hover:bg-gray-50">
-                          <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-normal sm:whitespace-nowrap text-xs sm:text-sm font-medium text-gray-900">
-                            {subject.subjectName}
+                          <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500">
+                            <SubjectCodeCell code={subject.subjectCode} name={subject.subjectName} />
                           </td>
                           <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500">
-                            {subject.subjectCode}
+                            <FacultyCell code={subject.facultyCode} name={subject.facultyName} />
                           </td>
                           <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500">
                             {subject.totalSessions}

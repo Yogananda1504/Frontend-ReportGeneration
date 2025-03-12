@@ -5,6 +5,8 @@ import { useAuth } from './hooks/useAuth';
 import Dashboard from './pages/Director/dashboard/Dashboard';
 import { ToastContainer } from 'react-toastify';
 import Landing from './pages/Landing';
+import QuickHelp from './pages/shared/QuickHelp';
+import "react-toastify/dist/ReactToastify.css";
 
 // The Protected Route component is used to restrict access to certain routes based on the user's role
 // It takes the allowedRoles prop which is an array of roles that are allowed to access the route
@@ -63,6 +65,9 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
+
+
           </Route>
         </Routes>
       </BrowserRouter>

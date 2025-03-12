@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { OverallAttendanceReport } from './OverallReport';
-import DailyAttendanceReport from './DailyReport';
 import MonthlyAttendanceReport from './MonthlyReport';
 import { mockAttendanceData } from '../../../mock/student/mockdata';
 import { getOverallAttendance, getMonthlyAttendance } from '../../../api/services/Student';
@@ -33,10 +32,6 @@ async function fetchOverallAttendanceData(scholarNumber) {
     };
 }
 
-async function fetchDailyAttendanceData() {
-    return mockAttendanceData.daily;
-}
-
 async function fetchMonthlyAttendanceData() {
     return mockAttendanceData.monthly;
 }
@@ -44,7 +39,6 @@ async function fetchMonthlyAttendanceData() {
 function StudentReport({ scholarNumber, studentDetails }: { scholarNumber: string, studentDetails: any }) {
     const [activeTab, setActiveTab] = useState('overall');
     const [overallData, setOverallData] = useState(null);
-    const [dailyData, setDailyData] = useState(null);
     const [monthlyData, setMonthlyData] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -65,24 +59,6 @@ function StudentReport({ scholarNumber, studentDetails }: { scholarNumber: strin
             })();
         }
     }, [scholarNumber, activeTab]);
-
-    useEffect(() => {
-        if (activeTab === 'daily') {
-            setIsLoading(true);
-            (async () => {
-                try {
-                    const data = await fetchDailyAttendanceData(scholarNumber);
-                    setDailyData(data);
-
-                } catch (error) {
-                    console.error('Error fetching daily attendance:', error);
-
-                } finally {
-                    setIsLoading(false);
-                }
-            })();
-        }
-    }, [activeTab]);
 
     useEffect(() => {
         if (activeTab === 'monthly') {
@@ -120,7 +96,7 @@ function StudentReport({ scholarNumber, studentDetails }: { scholarNumber: strin
                     </div>
 
                     <nav className="flex space-x-2 bg-white p-1 rounded-lg w-fit" aria-label="Tabs">
-                        {['overall', 'daily', 'monthly'].map((tab) => (
+                        {['overall', 'monthly'].map((tab) => (
                             <button
                                 key={tab}
                                 onClick={() => setActiveTab(tab)}
@@ -151,11 +127,6 @@ function StudentReport({ scholarNumber, studentDetails }: { scholarNumber: strin
                                     {activeTab === 'overall' && overallData && (
                                         <div className="bg-white rounded-lg shadow-sm">
                                             <OverallAttendanceReport data={overallData} />
-                                        </div>
-                                    )}
-                                    {activeTab === 'daily' && dailyData && (
-                                        <div className="bg-white rounded-lg shadow-sm">
-                                            <DailyAttendanceReport data={dailyData} />
                                         </div>
                                     )}
                                     {activeTab === 'monthly' && monthlyData && (

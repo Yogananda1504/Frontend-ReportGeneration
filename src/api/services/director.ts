@@ -1,13 +1,14 @@
 import { local } from "../base";
+import { toast } from "react-toastify";
 
 interface Department {
-	_id: string; 
+	_id: string;
 	count: number;
 }
 
-interface Branches{
-	session:[String];
-	branch:String;
+interface Branches {
+	session: [String];
+	branch: String;
 }
 
 export const getFacultyAttendance = async (
@@ -43,8 +44,30 @@ export const getDepartments = async (): Promise<Department[]> => {
 	return response.data;
 };
 
-export const getBranches = async ():Promise<Branches[]>=>{
+export const getBranches = async (): Promise<Branches[]> => {
 	const response = await local.get("/api/director/getBranches");
 	console.log("These are the available branches : ", response.data);
 	return response.data;
-}
+};
+
+local.interceptors.response.use(
+	(response) => response,
+	(error) => {
+		if (error.response) {
+			const { status } = error.response;
+			if (
+				(status === 404 || status === 400) &&
+				error.response.data?.error === "Employee not found"
+			) {
+				toast.error("Employee not found. Please check the faculty code.");
+			} else if ([400, 403, 404].includes(status)) {
+				toast.error(
+					`Error ${status}: ${
+						error.response.data?.message ?? "Something went wrong"
+					}`
+				);
+			}
+		}
+		return Promise.reject(error);
+	}
+);

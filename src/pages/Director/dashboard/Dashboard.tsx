@@ -32,6 +32,14 @@ function Dashboard() {
     if (type === 'faculty') {
       setShowStudentReport(false);
     }
+    if (type === 'student') {
+      setShowFacultyReport(false);
+    }
+  };
+
+  const handleFacultyReportLoadStart = () => {
+    setFacultyReportData(null);
+    setShowFacultyReport(false);
   };
 
   useEffect(() => {
@@ -79,6 +87,7 @@ function Dashboard() {
                       setShowStudentReport(false);
                     }}
                     onUserTypeSelected={handleUserTypeSelected}
+                    onFacultyReportLoadStart={handleFacultyReportLoadStart}
                   />
 
                   {/* Loading State */}

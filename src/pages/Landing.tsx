@@ -36,12 +36,6 @@ function NavBar() {
                     </a>
                 </div>
             </div>
-            {/* Optional Tagline (currently commented out) */}
-            {/*
-      <div className="flex justify-center items-center bg-[#1F3C5D] text-yellow-400 font-semibold text-sm tracking-wide py-4 md:text-center">
-        Analyze, Automate & Generate
-      </div>
-      */}
         </header>
     );
 }
@@ -54,7 +48,7 @@ function Footer() {
             ></div>
 
             <div className="container mx-auto px-2 relative z-10">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-2">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-2">
                     {/* CONTACT US */}
                     <div className="transform hover:scale-105 transition-transform duration-300">
                         <h2 className="text-base font-bold mb-1 text-blue-400 tracking-wide">
@@ -142,6 +136,23 @@ function Footer() {
                             >
                                 <FontAwesomeIcon icon={faInstagram} className="text-white text-xs" />
                             </a>
+                        </div>
+                    </div>
+                    {/* COLLABORATORS */}
+                    <div className="text-center md:text-left transform hover:scale-105 transition-transform duration-300">
+                        <h2 className="text-base font-bold mb-1 text-blue-400 tracking-wide">
+                            COLLABORATORS
+                        </h2>
+                        <div className="space-y-1 text-gray-300">
+                            <p className="hover:text-white transition-colors duration-200">
+                                V.Yogananda Reddy (MANIT'26)
+                            </p>
+                            <p className="hover:text-white transition-colors duration-200">
+                                Palak Agrawal (MANIT'26)
+                            </p>
+                            <p className="hover:text-white transition-colors duration-200">
+                                Pranjal Jain (MANIT'26)
+                            </p>
                         </div>
                     </div>
                 </div>
