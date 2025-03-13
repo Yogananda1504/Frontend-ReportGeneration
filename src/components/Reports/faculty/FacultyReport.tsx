@@ -18,9 +18,10 @@ interface FacultyRecord {
     course: string;
     session: string;
     scheduledClasses: number;
-    totalClasses: number;
+    totalClasses: number; // still set in data but won't be shown in the table
     isMarked: number;
     unmarkedDates: string[];
+    averageMarkedAttendance: number; // Added new field for average attendance percentage
 }
 
 interface FacultyReportProps {
@@ -106,13 +107,16 @@ const FacultyReport: React.FC<FacultyReportProps> = ({
                     )
                 },
                 {
-                    header: 'Total',
-                    accessorKey: 'totalClasses',
-                    cell: (info) => (
-                        <div className="text-center font-semibold text-gray-900">
-                            {info.getValue() as number}
-                        </div>
-                    )
+                    header: 'Avg Attendance %',
+                    accessorKey: 'averageMarkedAttendance',
+                    cell: (info) => {
+                        const value = info.getValue() as number;
+                        return (
+                            <div className="text-center font-semibold text-gray-900">
+                                {value.toFixed(2)}%
+                            </div>
+                        );
+                    }
                 },
                 {
                     header: 'Marked',
@@ -158,7 +162,7 @@ const FacultyReport: React.FC<FacultyReportProps> = ({
             <div className="bg-gradient-to-r from-blue-600 to-blue-800 px-6 py-4 flex items-center justify-between">
                 <div>
                     <h2 className="text-2xl font-bold text-white flex items-center">
-                        <FileSpreadsheet className="w-6 h-6 mr-2" />.''
+                        <FileSpreadsheet className="w-6 h-6 mr-2" />
                         Faculty Attendance Report
                     </h2>
                     <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-4">

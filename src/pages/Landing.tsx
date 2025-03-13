@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -12,7 +12,6 @@ function NavBar() {
     return (
         <header>
             <div className="bg-[#002147] text-white py-3 px-6 flex flex-wrap items-center justify-between">
-                {/* Left: Logo & Institute Name */}
                 <div className="flex items-center space-x-4">
                     <img src="/manit_sm.png" alt="MANIT Logo" className="h-10 w-auto" />
                     <div>
@@ -22,7 +21,6 @@ function NavBar() {
                         </p>
                     </div>
                 </div>
-                {/* Right: External Link */}
                 <div className="flex items-center space-x-6 mt-2 md:mt-0">
                     <a
                         href="https://www.manit.ac.in"
@@ -31,7 +29,6 @@ function NavBar() {
                         className="text-sm flex items-center text-yellow-400 hover:text-blue-200 transition-colors duration-200"
                     >
                         <span>MANIT</span>
-                        {/* Lucide External Link Icon */}
                         <i data-lucide="external-link" className="ml-1" width="14" height="14"></i>
                     </a>
                 </div>
@@ -42,11 +39,8 @@ function NavBar() {
 
 function Footer() {
     return (
-        <footer className="bg-gradient-to-b from-black to-[#1a1a1a] text-white pt-5 pb-1 text-xs relative">
-            <div
-                className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-50"
-            ></div>
-
+        <footer className="bg-gradient-to-b from-[#001529] to-black text-white pt-5 pb-1 text-xs relative">
+            <div className="mesh-overlay absolute inset-0"></div>
             <div className="container mx-auto px-2 relative z-10">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-2">
                     {/* CONTACT US */}
@@ -176,15 +170,29 @@ function Footer() {
 
 function Landing() {
     const navigate = useNavigate();
+    const [isLowConnectivity, setIsLowConnectivity] = useState(false);
 
     useEffect(() => {
-        // Initialize Lucide icons after the component mounts.
         if (window.lucide) {
             window.lucide.createIcons();
         }
+
+        // Monitor connection speed
+        const connection = navigator.connection as any;
+        if (connection) {
+            const updateConnectionStatus = () => {
+                const isLow = connection.downlink <= 1 || connection.effectiveType === '2g';
+                setIsLowConnectivity(isLow);
+                document.body.classList.toggle('low-connectivity', isLow);
+            };
+
+            connection.addEventListener('change', updateConnectionStatus);
+            updateConnectionStatus();
+
+            return () => connection.removeEventListener('change', updateConnectionStatus);
+        }
     }, []);
 
-    // Function to handle navigation to login page
     const goToLogin = () => {
         navigate('/login');
     };
@@ -192,39 +200,50 @@ function Landing() {
     return (
         <div className="min-h-screen flex flex-col">
             <NavBar />
-            <main
-                className="flex-1 flex flex-col items-center justify-center relative"
-                style={{
-                    backgroundImage: 'url("/bg1.jpg")',
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                }}
-            >
-                {/* Dark Overlay */}
-                <div className="absolute inset-0 bg-black/50"></div>
+            <main className="flex-1 flex flex-col items-center justify-center relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-animation"></div>
+                <div className="mesh-overlay absolute inset-0"></div>
+
+                {isLowConnectivity && (
+                    <div className="low-connectivity-indicator">
+                        Low connectivity mode active
+                    </div>
+                )}
 
                 <div className="relative z-10 text-center text-white mb-16 px-4">
-                    <h1 className="text-5xl md:text-6xl font-bold mb-4">WELCOME TO MANIT</h1>
-                    <h2 className="text-4xl md:text-5xl font-semibold mb-2">ATTENDANCE</h2>
-                    <h3 className="text-3xl md:text-4xl font-semibold">MANAGEMENT PORTAL</h3>
+                    <h1 className="text-5xl md:text-6xl font-bold mb-4 animate-fade-in">
+                        WELCOME TO MANIT
+                    </h1>
+                    <h2 className="text-4xl md:text-5xl font-semibold mb-2 animate-fade-in animation-delay-200">
+                        ATTENDANCE
+                    </h2>
+                    <h3 className="text-3xl md:text-4xl font-semibold animate-fade-in animation-delay-400">
+                        MANAGEMENT PORTAL
+                    </h3>
                 </div>
 
-                <div className="relative z-10 flex flex-wrap gap-8 justify-center">
+                <div className="relative z-10 flex flex-wrap gap-8 justify-center px-4">
                     <div
                         onClick={goToLogin}
-                        className="bg-black/70 hover:bg-black/80 backdrop-blur-sm border border-white/20 p-6 rounded-lg shadow-lg transition-all duration-300 w-64 text-center cursor-pointer"
+                        className="glass-card w-72 text-center cursor-pointer"
                     >
                         <h3 className="text-2xl font-semibold text-white mb-2">
                             Attendance Management
                         </h3>
+                        <p className="text-gray-300 text-sm">
+                            Record and manage student attendance
+                        </p>
                     </div>
                     <div
                         onClick={goToLogin}
-                        className="bg-black/70 hover:bg-black/80 backdrop-blur-sm border border-white/20 p-6 rounded-lg shadow-lg transition-all duration-300 w-64 text-center cursor-pointer"
+                        className="glass-card w-72 text-center cursor-pointer"
                     >
                         <h3 className="text-2xl font-semibold text-white mb-2">
                             Attendance Report Generation
                         </h3>
+                        <p className="text-gray-300 text-sm">
+                            Generate and export attendance reports
+                        </p>
                     </div>
                 </div>
             </main>
