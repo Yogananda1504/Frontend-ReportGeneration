@@ -21,3 +21,7 @@ export const getSubjectsByProfessor = async (professorId: string) => {
 		throw error;
 	}
 };
+
+
+
+

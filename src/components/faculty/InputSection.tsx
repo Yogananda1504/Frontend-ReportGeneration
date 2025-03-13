@@ -17,7 +17,7 @@ const InputSectionContent = ({ onTimetableSubmit, onSelfReportSubmit, onClassSub
     const toast = useToast();
 
     const [startDate, setStartDate] = useState('');
-    const [endDate, setEndDate] = useState('');
+    const [endDate, setEndDate] = useState(new Date().toISOString());
 
     const handleSubmit = useCallback(async () => {
         if (isLoading) return;
@@ -116,8 +116,8 @@ const InputSectionContent = ({ onTimetableSubmit, onSelfReportSubmit, onClassSub
                                 <label className="block mb-1">End Date</label>
                                 <input
                                     type="date"
-                                    value={endDate}
-                                    onChange={e => setEndDate(e.target.value)}
+                                    value={endDate.split('T')[0]}
+                                    onChange={e => setEndDate(new Date(e.target.value).toISOString())}
                                     className="border p-2 rounded max-w-xs" // changed from w-full to max-w-xs
                                 />
                             </div>

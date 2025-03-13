@@ -20,7 +20,7 @@ export const getFacultyAttendance = async (
 	const payload = {
 		employeeCode,
 		startDate,
-		endDate,
+		endDate: endDate ? Date.now() : null,
 		...(subjectId ? { subjectId } : {}),
 	};
 	const response = await local.post("/api/faculty/facultyAttendance", payload);
@@ -31,12 +31,7 @@ export const getFacultyAttendance = async (
 	return response.data;
 };
 
-// Retrieves the faculty details and also the timetable of the faculty
-export const getFacultyDetails = async (employeeCode: string) => {
-	const response = await local.post("/faculty/details", { employeeCode });
-	console.log("These are the  details of the faculty : ", response.data);
-	return response.data;
-};
+
 
 export const getDepartments = async (): Promise<Department[]> => {
 	const response = await local.get("/api/director/getDepartments");
@@ -47,6 +42,13 @@ export const getDepartments = async (): Promise<Department[]> => {
 export const getBranches = async (): Promise<Branches[]> => {
 	const response = await local.get("/api/director/getBranches");
 	console.log("These are the available branches : ", response.data);
+	return response.data;
+};
+
+// Retrieves the faculty details and also the timetable of the faculty
+export const getFacultyDetails = async (employeeCode: string) => {
+	const response = await local.get(`/api/faculty/details?employeeCode=${employeeCode}`);
+	console.log("These are the  details of the faculty : ", response.data);
 	return response.data;
 };
 
