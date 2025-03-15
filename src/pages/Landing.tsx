@@ -252,7 +252,8 @@ function Landing() {
                 )}
 
                 <div className="text-center mb-16 max-w-4xl mx-auto">
-                    <h1 className="text-4xl md:text-5xl font-black mb-6 bg-gradient-to-r from-[#002147] via-[#004a94] to-[#002147] bg-clip-text text-transparent animate-shine">
+                    {/* Changed header styling */}
+                    <h1 className="text-4xl md:text-5xl font-black mb-6 shine-effect drop-shadow-[0_0_8px_black] ">
                         WELCOME TO MANIT
                     </h1>
                     <div className="space-y-2">
