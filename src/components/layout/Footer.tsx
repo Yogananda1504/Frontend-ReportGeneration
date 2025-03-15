@@ -111,6 +111,7 @@ const Footer = () => {
               <p>V.Yogananda Reddy (MANIT'26)</p>
               <p>Palak Agrawal (MANIT'26)</p>
               <p>Pranjal Jain (MANIT'26)</p>
+              <p>Sakshi Rai (MANIT'26)</p>
             </div>
           </div>
         </div>

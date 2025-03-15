@@ -163,6 +163,9 @@ function Footer() {
                             <p className="hover:text-gray-300 transition-colors duration-200">
                                 Pranjal Jain (MANIT'26)
                             </p>
+                            <p className="hover:text-gray-300 transition-colors duration-200">
+                                Sakshi Rai (MANIT'26)
+                            </p>
                         </div>
                     </div>
                 </div>
