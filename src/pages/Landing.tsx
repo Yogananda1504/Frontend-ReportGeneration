@@ -59,14 +59,15 @@ function Footer() {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-3 text-center md:text-left">
                     {/* CONTACT US */}
                     <div className="transform hover:scale-105 transition-transform duration-300 mb-3">
-                        <h2 className="text-base font-bold mb-3 text-blue-400 tracking-wide">
+                        <h2 className="text-base font-bold mb-3 text-blue-400 tracking-wide uppercase">
                             CONTACT US
                         </h2>
                         <div className="space-y-2 text-white hover:text-gray-300 transition-colors duration-200">
                             <p className="flex flex-col sm:flex-row items-start">
                                 <i data-lucide="map-pin" className="w-3.5 h-3.5 mr-1 flex-shrink-0"></i>
                                 <span>
-                                    Link Road Number 3, Near Kali Mata Mandir, Bhopal, Madhya Pradesh, India 462003
+                                    Link Road Number 3, Near Kali Mata Mandir,
+                                    Bhopal, Madhya Pradesh, India 462003
                                 </span>
                             </p>
                             <p className="flex items-center">
@@ -79,9 +80,10 @@ function Footer() {
                             </p>
                         </div>
                     </div>
+
                     {/* GET IN TOUCH */}
                     <div className="transform hover:scale-105 transition-transform duration-300 mb-3">
-                        <h2 className="text-base font-bold mb-3 text-blue-400 tracking-wide">
+                        <h2 className="text-base font-bold mb-3 text-blue-400 tracking-wide uppercase">
                             GET IN TOUCH
                         </h2>
                         <div className="space-y-2 text-white hover:text-gray-300 transition-colors duration-200">
@@ -106,9 +108,24 @@ function Footer() {
                             </p>
                         </div>
                     </div>
+
+                    {/* COLLABORATORS */}
+                    <div className="transform hover:scale-105 transition-transform duration-300 mb-3">
+                        <h2 className="text-base font-bold mb-3 text-blue-400 tracking-wide uppercase">
+                            COLLABORATORS
+                        </h2>
+                        <ul className="list-disc pl-5 space-y-2 text-gray-300 hover:text-white transition-colors duration-200">
+                            <li>Rakesh Kundan (MANIT'25) - DevOps</li>
+                            <li>V.Yogananda Reddy, Palak Agrawal (MANIT'26) – Backend, API</li>
+                            <li>Pranjal Jain, Mansi Upadhyay (MANIT'26) – Frontend, Figma</li>
+                            <li>Sakshi Rai (MANIT'26) – Documentation & Frontend</li>
+                            
+                        </ul>
+                    </div>
+
                     {/* FOLLOW US */}
                     <div className="transform hover:scale-105 transition-transform duration-300 mb-3">
-                        <h2 className="text-base font-bold mb-3 text-blue-400 tracking-wide">
+                        <h2 className="text-base font-bold mb-3 text-blue-400 tracking-wide uppercase">
                             FOLLOW US
                         </h2>
                         <div className="flex justify-center md:justify-start space-x-4">
@@ -145,18 +162,6 @@ function Footer() {
                                 <FontAwesomeIcon icon={faInstagram} className="text-white text-xs" />
                             </a>
                         </div>
-                    </div>
-                    {/* COLLABORATORS */}
-                    <div className="transform hover:scale-105 transition-transform duration-300">
-                        <h2 className="text-xl font-bold mb-4 text-blue-400 tracking-wide">
-                            COLLABORATORS
-                        </h2>
-                        <ul className="list-disc pl-5 space-y-2 text-gray-300 hover:text-white transition-colors duration-200">
-                            <div>Rakesh Kundan (MANIT'25) - DevOps</div>
-                            <div>V.Yogananda Reddy , Palak Agrawal (MANIT'26) –  Backend Developers , API Designing</div>
-                            <div>Sakshi Rai (MANIT'26) – Documentation & Frontend</div>
-                            <div>Pranjal Jain, Mansi Upadhyay (MANIT'26) – Frontend, Figma Designing</div>
-                        </ul>
                     </div>
                 </div>
 
