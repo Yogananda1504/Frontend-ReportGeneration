@@ -7,6 +7,7 @@ import {
     faYoutube,
     faInstagram,
 } from '@fortawesome/free-brands-svg-icons';
+import { Eye, Info } from 'lucide-react'; // using ClipboardCheck as alternative
 
 function NavBar() {
     const handleNavClick = () => {
@@ -146,27 +147,16 @@ function Footer() {
                         </div>
                     </div>
                     {/* COLLABORATORS */}
-                    <div className="text-center md:text-left transform hover:scale-105 transition-transform duration-300">
-                        <h2 className="text-base font-bold mb-3 text-blue-400 tracking-wide">
+                    <div className="transform hover:scale-105 transition-transform duration-300">
+                        <h2 className="text-xl font-bold mb-4 text-blue-400 tracking-wide">
                             COLLABORATORS
                         </h2>
-                        <div className="space-y-2 text-white">
-                            <p className="hover:text-gray-300 transition-colors duration-200">
-                                Rakesh Kundan(MANIT'25)
-                            </p>
-                            <p className="hover:text-gray-300 transition-colors duration-200">
-                                V.Yogananda Reddy (MANIT'26)
-                            </p>
-                            <p className="hover:text-gray-300 transition-colors duration-200">
-                                Palak Agrawal (MANIT'26)
-                            </p>
-                            <p className="hover:text-gray-300 transition-colors duration-200">
-                                Pranjal Jain (MANIT'26)
-                            </p>
-                            <p className="hover:text-gray-300 transition-colors duration-200">
-                                Sakshi Rai (MANIT'26)
-                            </p>
-                        </div>
+                        <ul className="list-disc pl-5 space-y-2 text-gray-300 hover:text-white transition-colors duration-200">
+                            <div>Rakesh Kundan (MANIT'25) - DevOps</div>
+                            <div>V.Yogananda Reddy , Palak Agrawal (MANIT'26) –  Backend Developers , API Designing</div>
+                            <div>Sakshi Rai (MANIT'26) – Documentation & Frontend</div>
+                            <div>Pranjal Jain, Mansi Upadhyay (MANIT'26) – Frontend, Figma Designing</div>
+                        </ul>
                     </div>
                 </div>
 
@@ -245,7 +235,7 @@ function Landing() {
                 {isLowConnectivity && (
                     <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-8 rounded">
                         <div className="flex items-center">
-                            <i data-lucide="wifi-off" className="w-5 h-5 mr-2"></i>
+                            <Info size={18} className="mr-2" />
                             <span>Low connectivity mode active</span>
                         </div>
                     </div>
@@ -256,6 +246,7 @@ function Landing() {
                     <h1 className="text-4xl md:text-5xl font-black mb-6 shine-effect drop-shadow-[0_0_8px_black] ">
                         WELCOME TO MANIT
                     </h1>
+                    <img src="/eye-with-eyelash.png" alt="Eye Icon" className="mx-auto my-4" style={{ width: '40px', height: '40px' }} />
                     <div className="space-y-2">
                         <h2 className="text-2xl md:text-3xl font-bold text-[#002147]">
                             ATTENDANCE
