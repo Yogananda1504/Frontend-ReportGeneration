@@ -117,7 +117,7 @@ function Footer() {
                         <ul className="list-disc pl-5 space-y-2 text-gray-300 hover:text-white transition-colors duration-200">
                             <li>Rakesh Kundan (MANIT'25) - DevOps</li>
                             <li>V.Yogananda Reddy, Palak Agrawal (MANIT'26) – Backend, API</li>
-                            <li>Pranjal Jain, Mansi Upadhyay (MANIT'26) – Frontend, Figma</li>
+                            <li>Pranjal Jain, Mansi Upadhyay (MANIT'26) – Frontend, Figma  , Graphic</li>
                             <li>Sakshi Rai (MANIT'26) – Documentation & Frontend</li>
                             
                         </ul>
