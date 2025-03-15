@@ -6,7 +6,16 @@ import {
   faYoutube,
   faInstagram,
 } from "@fortawesome/free-brands-svg-icons";
-import { MapPin, Phone, Printer, Mail, Globe, AtSign } from "lucide-react";
+import {
+  MapPin,
+  Phone,
+  Printer,
+  Mail,
+  Globe,
+  AtSign,
+  UserCheck,
+  GraduationCap
+} from "lucide-react";
 
 const Footer = () => {
   return (
@@ -64,6 +73,34 @@ const Footer = () => {
 
           <div className="transform hover:scale-105 transition-transform duration-300">
             <h2 className="text-xl font-bold mb-4 text-blue-400 tracking-wide">
+              COLLABORATORS
+            </h2>
+            <ul className="list-disc pl-5 space-y-2 text-gray-300 hover:text-white transition-colors duration-200">
+                <li className="flex items-center text-yellow-500">
+                <UserCheck className="w-4 h-4 mr-2" />
+                Dr. Deepak Singh Tomar  (HOD CSE)
+                </li>
+              <li className="flex items-center">
+                <GraduationCap className="w-4 h-4 mr-2" />
+                Mr.Sudheer  Sir, Rakesh Kundan (MANIT'25)
+              </li>
+              <li className="flex items-center">
+                <GraduationCap className="w-4 h-4 mr-2" />
+                V.Yogananda Reddy, Palak Agrawal (MANIT'26)
+              </li>
+              <li className="flex items-center">
+                <GraduationCap className="w-4 h-4 mr-2" />
+                Pranjal Jain, Mansi Upadhyay (MANIT'26)
+              </li>
+              <li className="flex items-center">
+                <GraduationCap className="w-4 h-4 mr-2" />
+                Sakshi Rai (MANIT'26)
+              </li>
+            </ul>
+          </div>
+
+          <div className="transform hover:scale-105 transition-transform duration-300">
+            <h2 className="text-xl font-bold mb-4 text-blue-400 tracking-wide">
               FOLLOW US
             </h2>
             <div className="flex justify-center md:justify-start space-x-6">
@@ -102,31 +139,19 @@ const Footer = () => {
             </div>
           </div>
 
-          <div className="transform hover:scale-105 transition-transform duration-300">
-            <h2 className="text-xl font-bold mb-4 text-blue-400 tracking-wide">
-              COLLABORATORS
-            </h2>
-
-            <ul className="list-disc pl-5 space-y-2 text-gray-300 hover:text-white transition-colors duration-200">
-              <li>Rakesh Kundan (MANIT'25) - DevOps </li>
-              <li>V.Yogananda Reddy (MANIT'26), Palak Agrawal (MANIT'26) – Backend Developers , API Designing </li>
-              <li>Sakshi Rai (MANIT'26) – Documentation & Frontend</li>
-              <li>Pranjal Jain, Mansi Upadhyay (MANIT'26) – Frontend, Figma Designing</li>
-            </ul>
-          </div>
+          
         </div>
 
-        <div className="pt-2 mt-2 border-t border-gray-700/50 text-center">
-          <p className="text-yellow-400 hover:text-white transition-colors duration-200">
-            © {new Date().getFullYear()} MANIT Bhopal. All Rights Reserved |
-            <a href="#" className="ml-1 text-blue-400 hover:text-blue-300 transition-colors duration-200">
-              Terms of Use
-            </a> and
-            <a href="#" className="ml-1 text-blue-400 hover:text-blue-300 transition-colors duration-200">
-              Privacy Policy
-            </a>
-          </p>
-        </div>
+        <div className="pt-2 mt-2 border-t border-gray-700/50 text-center"></div>
+        <p className="text-yellow-400 hover:text-white transition-colors duration-200 text-center">
+          © {new Date().getFullYear()} MANIT Bhopal. All Rights Reserved |
+          <a href="#" className="ml-1 text-blue-400 hover:text-blue-300 transition-colors duration-200">
+            Terms of Use
+          </a> and
+          <a href="#" className="ml-1 text-blue-400 hover:text-blue-300 transition-colors duration-200">
+            Privacy Policy
+          </a>
+        </p>
       </div>
     </footer>
   );
