@@ -39,7 +39,7 @@ const FacultyReport: React.FC<FacultyReportProps> = ({
     endDate = "Present",
     employeeCode = '0000' // renamed default prop
 }) => {
-    const tableData = React.useMemo(() => data, [data]);
+    const tableData = React.useMemo(() => data || [], [data]);
 
     const [showModal, setShowModal] = React.useState(false);
     const [selectedUnmarked, setSelectedUnmarked] = React.useState<string[]>([]);

@@ -8,7 +8,7 @@ import Footer from '../../components/layout/Footer';
 export default function Login() {
   const navigate = useNavigate();
   const { login, isLoading } = useAuth();
-  const [role, setRole] = useState<UserRole>('FACULTY');
+  const [role, setRole] = useState<UserRole>('DIRECTOR');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -92,7 +92,7 @@ export default function Login() {
 
       {/* Center: Tagline */}
       <div className="flex justify-center items-center bg-[#1F3C5D] md:block text-yellow-400 font-semibold text-sm tracking-wide pt-8 pb-4 md:text-center">
-        <span className="shine-effect">Analyze, Automate & Generate</span>
+        <span className="shine-effect">ATMRGS - Analyze, Automate & Generate</span>
       </div>
 
       {isLowConnectivity && (
@@ -121,12 +121,12 @@ export default function Login() {
                   />
                 </div>
                 {/*<h2 className="text-3xl font-bold text-black mb-2 tracking-tight">MANIT Bhopal</h2> */}
-                <p className="text-black text-xl font-bold  ">Attendance Management System</p>
+                <p className="text-black text-xl font-bold  ">Attendance Report Generation System</p>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-6">
                 {error && (
-                  <div className="bg-red-500/10 border border-red-500/50 text-red-100 p-4 rounded-lg text-sm text-center animate-shake">
+                  <div className="bg-black/60 backdrop-blur-sm border border-black/80 text-yellow-400 p-4 rounded-lg text-sm text-center animate-shake">
                     {error}
                   </div>
                 )}

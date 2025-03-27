@@ -9,14 +9,25 @@ export const exportToPDF = async (elementId: string, fileName: string = 'report.
     }
 
     try {
+        const container = element.querySelector('.overflow-x-auto.h-80.overflow-y-auto');
+        let originalStyle: { height: string; overflow: string } | null = null;
+        if (container) {
+            originalStyle = {
+                height: container.style.height,
+                overflow: container.style.overflow,
+            };
+            container.style.height = 'auto';
+            container.style.overflow = 'visible';
+        }
+
         const options = {
             margin: [15, 15],
             filename: fileName,
             image: { type: 'jpeg', quality: 1 },
             html2canvas: {
                 scale: 3,
-                useCORS: true,
                 letterRendering: true,
+                useCORS: true,
                 allowTaint: true,
                 logging: false,
                 windowWidth: 1080
@@ -31,6 +42,11 @@ export const exportToPDF = async (elementId: string, fileName: string = 'report.
         };
 
         await html2pdf().set(options).from(element).save();
+
+        if (container && originalStyle) {
+            container.style.height = originalStyle.height;
+            container.style.overflow = originalStyle.overflow;
+        }
     } catch (error) {
         console.error('Error exporting PDF:', error);
     }

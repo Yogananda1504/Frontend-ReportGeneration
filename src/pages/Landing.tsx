@@ -9,7 +9,7 @@ import {
 } from '@fortawesome/free-brands-svg-icons';
 import {
     Eye, Info,
-     MapPin,
+    MapPin,
     Phone,
     Printer,
     Mail,
@@ -253,7 +253,8 @@ function Landing() {
     return (
         <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#f8f8f0] to-[#f0f0e8]">
             <NavBar />
-            <main className="flex-1 flex flex-col items-center justify-start py-12 px-4">
+            {/* Updated main background color */}
+            <main className="flex-1 flex flex-col items-center justify-start py-12 px-4 bg-gradient-to-r from-[#d7e1ec] to-[#f7f9fa]">
                 {isLowConnectivity && (
                     <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-8 rounded">
                         <div className="flex items-center">
@@ -268,7 +269,7 @@ function Landing() {
                     <h1 className="text-4xl md:text-5xl font-black mb-6 shine-effect drop-shadow-[0_0_8px_black] ">
                         WELCOME TO MANIT
                     </h1>
-                    <img src="/eye-with-eyelash.png" alt="Eye Icon" className="mx-auto my-4" style={{ width: '40px', height: '40px' }} />
+                    
                     <div className="space-y-2">
                         <h2 className="text-2xl md:text-3xl font-bold text-[#002147]">
                             ATTENDANCE
@@ -276,6 +277,7 @@ function Landing() {
                         <h3 className="text-xl md:text-2xl font-semibold text-[#004a94]">
                             MANAGEMENT PORTAL
                         </h3>
+                        <img src="/eye-with-eyelash.png" alt="Eye Icon" className="mx-auto my-4" style={{ width: '40px', height: '40px' }} />
                     </div>
                 </div>
 
@@ -299,6 +301,7 @@ function Landing() {
                                 Mark and monitor attendance seamlessly.
                             </p>
                         </div>
+                        
                         <div
                             onClick={goToLogin}
                             className="bg-white/80 backdrop-blur-lg rounded-2xl p-8 shadow-lg cursor-pointer card-hover"

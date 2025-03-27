@@ -8,6 +8,7 @@ import Landing from './pages/Landing';
 import QuickHelp from './pages/shared/QuickHelp';
 import "react-toastify/dist/ReactToastify.css";
 import { Dashboard as FacultyDashboard } from './pages/Faculty/dashboard/Dashboard';
+import { useEffect, useState } from 'react';
 
 // The Protected Route component is used to restrict access to certain routes based on the user's role
 // It takes the allowedRoles prop which is an array of roles that are allowed to access the route
@@ -28,9 +29,33 @@ function ProtectedRoute({ children, allowedRoles }: { children: React.ReactNode;
 }
 
 function App() {
+  const [toastPosition, setToastPosition] = useState(
+    window.innerWidth < 768 ? "bottom-center" : "top-right"
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setToastPosition(window.innerWidth < 768 ? "bottom-center" : "top-right");
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <>
-      <ToastContainer />
+      <ToastContainer
+        position={toastPosition as any}
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -42,7 +67,7 @@ function App() {
               path="faculty/dashboard"
               element={
                 <ProtectedRoute allowedRoles={['FACULTY']}>
-                <FacultyDashboard/>
+                  <FacultyDashboard />
                 </ProtectedRoute>
               }
             />
@@ -52,7 +77,7 @@ function App() {
               path="hod/dashboard"
               element={
                 <ProtectedRoute allowedRoles={['HOD']}>
-                  <div>HOD Dashboard</div>
+                  <div>HOD Dashboard Component Goes Here ....</div>
                 </ProtectedRoute>
               }
             />

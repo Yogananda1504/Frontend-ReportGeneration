@@ -20,7 +20,7 @@ const demoUsers = {
 	HOD: {
 		id: "2",
 		email: "hodcse@manit.ac.in",
-		role: "HOD" as UserRole,
+		role: "HOD_CSE" as UserRole,
 		name: "Demo HOD",
 	},
 	DIRECTOR: {
