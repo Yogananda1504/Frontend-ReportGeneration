@@ -92,8 +92,31 @@ function App() {
               }
             />
 
-
-
+            {/* QuickHelp Routes */}
+            <Route
+              path="hod/QuickHelp"
+              element={
+                <ProtectedRoute allowedRoles={['HOD']}>
+                  <QuickHelp />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="faculty/QuickHelp"
+              element={
+                <ProtectedRoute allowedRoles={['FACULTY']}>
+                  <QuickHelp />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="director/QuickHelp"
+              element={
+                <ProtectedRoute allowedRoles={['DIRECTOR']}>
+                  <QuickHelp />
+                </ProtectedRoute>
+              }
+            />
           </Route>
         </Routes>
       </BrowserRouter>

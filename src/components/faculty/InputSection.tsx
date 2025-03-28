@@ -1,3 +1,8 @@
+
+
+
+
+
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { Calendar, FileText, Archive, ChevronDown, ChevronUp, Loader2 } from 'lucide-react';
 import { toast } from 'react-toastify';
@@ -246,11 +251,20 @@ const InputSection = ({ onTimetableSubmit, onSelfReportSubmit, onClassSubmit, on
 
     return (
         <div className="bg-white rounded-lg shadow-lg">
-            <div className="p-6 flex justify-between items-center cursor-pointer" onClick={() => setIsCollapsed(!isCollapsed)}>
+            <div 
+                className="p-6 flex justify-between items-center cursor-pointer" 
+                onClick={() => setIsCollapsed(!isCollapsed)}
+            >
                 <h2 className="text-2xl font-bold text-gray-900">Input Section</h2>
                 {isCollapsed ? <ChevronDown className="w-6 h-6 text-gray-500" /> : <ChevronUp className="w-6 h-6 text-gray-500" />}
             </div>
-            {!isCollapsed && (
+            
+            {/* Smooth Collapse Animation */}
+            <div 
+                className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                    isCollapsed ? 'max-h-0 opacity-0' : 'max-h-screen opacity-100'
+                }`}
+            >
                 <form onSubmit={debouncedSubmit} className="p-6 pt-0">
                     {/* Tab Selection */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
@@ -347,7 +361,7 @@ const InputSection = ({ onTimetableSubmit, onSelfReportSubmit, onClassSubmit, on
                         </button>
                     </div>
                 </form>
-            )}
+            </div>
         </div>
     );
 };

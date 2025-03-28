@@ -139,7 +139,7 @@ export function Dashboard() {
         );
       }
       return isTimetableFetched && timeTable ? (
-        <div className="bg-white rounded-xl shadow-md overflow-hidden">
+        <div className="bg-white rounded-xl shadow-[8px_0_15px_rgba(0,0,255,0.3)] w-full h-auto">
           <div className="relative">
             <div className="absolute top-4 right-4">
               <button
@@ -150,13 +150,13 @@ export function Dashboard() {
                 Export PDF
               </button>
             </div>
-            <div id="timetable-container">
+            <div id="timetable-container" className="w-full">
               <Timetable timeTable={timeTable} dayNames={dayNames} />
             </div>
           </div>
         </div>
       ) : (
-        <div className="bg-white rounded-xl shadow-md p-6 text-center text-gray-500">
+        <div className="bg-white rounded-xl shadow-[8px_0_15px_rgba(0,0,255,0.3)] p-6 text-center text-gray-500">
           Please submit to view your timetable
         </div>
       );
@@ -170,7 +170,7 @@ export function Dashboard() {
         );
       }
       return isFacultyReportFetched && facultyReportData ? (
-        <div className="bg-white rounded-xl shadow-md overflow-hidden">
+        <div className="bg-white rounded-xl shadow-[8px_0_15px_rgba(0,0,255,0.3)] overflow-hidden">
           <div className="relative">
             {/* <div className="absolute top-4 right-4">
              
@@ -187,7 +187,7 @@ export function Dashboard() {
           </div>
         </div>
       ) : (
-        <div className="bg-white rounded-xl shadow-md p-6 text-center text-gray-500">
+        <div className="bg-white rounded-xl shadow-[8px_0_15px_rgba(0,0,255,0.3)] p-6 text-center text-gray-500">
           Please submit to view your faculty report
         </div>
       );
@@ -201,7 +201,7 @@ export function Dashboard() {
         );
       }
       return isClassReportFetched && classReportData ? (
-        <div className="bg-white rounded-xl shadow-md overflow-hidden">
+        <div className="bg-white rounded-xl shadow-[8px_0_15px_rgba(0,0,255,0.3)] overflow-hidden">
           <div className="relative">
             <div className="absolute top-4 right-4">
               <button
@@ -218,7 +218,7 @@ export function Dashboard() {
           </div>
         </div>
       ) : (
-        <div className="bg-white rounded-xl shadow-md p-6 text-center text-gray-500">
+        <div className="bg-white rounded-xl shadow-[8px_0_15px_rgba(0,0,255,0.3)] p-6 text-center text-gray-500">
           Please submit to view class report
         </div>
       );
@@ -312,7 +312,7 @@ export function Dashboard() {
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Faculty Profile Card */}
-        <div className="bg-white rounded-xl shadow-md overflow-hidden mb-8">
+        <div className="bg-white rounded-xl shadow-[8px_0_15px_rgba(0,0,255,0.3)] overflow-hidden mb-8">
           <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-6">
             <div className="flex items-center gap-4">
               <div className="bg-white p-3 rounded-full">
@@ -348,7 +348,7 @@ export function Dashboard() {
         </div>
 
         {/* Input Section */}
-        <div className="bg-white rounded-xl shadow-md p-6 mb-8">
+        <div className="bg-white rounded-xl shadow-[8px_0_15px_rgba(0,0,255,0.3)] p-6 mb-8">
           <InputSection
             empCode={empCode}
             onTabChange={handleInputSectionTabChange}
