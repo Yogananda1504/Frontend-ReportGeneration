@@ -13,8 +13,8 @@ export const NavLinks: React.FC<NavLinksProps> = ({ role }) => {
   if (role === 'HOD') {
     return (
       <div className="flex sm:flex-row flex-col sm:gap-5 gap-2">
-        <NavLink to={`/${role}/dashboard`} className={linkClass}>Dashboard</NavLink>
-        <NavLink to={`/${role}/QuickHelp`} className={linkClass}>QuickHelp</NavLink>
+        <NavLink to={`/${role.toLowerCase()}/dashboard`} className={linkClass}>Dashboard</NavLink>
+        <NavLink to={`/${role.toLowerCase()}/QuickHelp`} className={linkClass}>QuickHelp</NavLink>
         
       </div>
     );
@@ -23,8 +23,8 @@ export const NavLinks: React.FC<NavLinksProps> = ({ role }) => {
   if (role === 'FACULTY') {
     return (
       <div className="flex sm:flex-row flex-col sm:gap-5 gap-2">
-         <NavLink to={`/${role}/dashboard`} className={linkClass}>Dashboard</NavLink>
-         <NavLink to={`/${role}/QuickHelp`} className={linkClass}>QuickHelp</NavLink>
+         <NavLink to={`/${role.toLowerCase()}/dashboard`} className={linkClass}>Dashboard</NavLink>
+         <NavLink to={`/${role.toLowerCase()}/QuickHelp`} className={linkClass}>QuickHelp</NavLink>
       </div>
     );
   }
@@ -32,8 +32,8 @@ export const NavLinks: React.FC<NavLinksProps> = ({ role }) => {
   if (role === 'DIRECTOR') {
     return (
       <div className="flex sm:flex-row flex-col sm:gap-5 gap-2">
-         <NavLink to={`/${role}/dashboard`} className={linkClass}>Dashboard</NavLink>
-         <NavLink to={`/${role}/QuickHelp`} className={linkClass}>QuickHelp</NavLink>
+         <NavLink to={`/${role.toLowerCase()}/dashboard`} className={linkClass}>Dashboard</NavLink>
+         <NavLink to={`/${role.toLowerCase()}/QuickHelp`} className={linkClass}>QuickHelp</NavLink>
       </div>
     );
   }
