@@ -112,9 +112,13 @@ export function Dashboard() {
     }
   }, [facultyReportData]);
 
-  const TabButton = ({ id, label, icon: Icon }) => (
+  const handleTabClick = useCallback((id: string) => {
+    setActiveTab(id);
+  }, [setActiveTab]);
+
+  const TabButton = React.memo(({ id, label, icon: Icon }) => (
     <button
-      onClick={() => setActiveTab(id)}
+      onClick={() => handleTabClick(id)}
       className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${activeTab === id
         ? 'bg-blue-600 text-white'
         : 'text-gray-600 hover:bg-gray-100'
@@ -123,7 +127,7 @@ export function Dashboard() {
       <Icon className="h-5 w-5" />
       <span>{label}</span>
     </button>
-  );
+  ));
 
   const renderActiveContent = () => {
     if (activeTab === 'timetable') {
@@ -306,7 +310,7 @@ export function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Faculty Profile Card */}
         <div className="bg-white rounded-xl shadow-md overflow-hidden mb-8">
           <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-6">
@@ -323,7 +327,7 @@ export function Dashboard() {
               </div>
             </div>
           </div>
-          <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 bg-gray-50">
+          {/* <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 bg-gray-50">
             <div className="flex items-center gap-3 text-gray-600">
               <Mail className="h-5 w-5 text-blue-600" />
               <span>{empDetails.email || 'N/A'}</span>
@@ -340,7 +344,7 @@ export function Dashboard() {
               <BookOpen className="h-5 w-5 text-blue-600" />
               <span>{subjects.length} Subjects</span>
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* Input Section */}
