@@ -63,3 +63,29 @@ export const getStudentDetails = async (
 		throw error;
 	}
 };
+
+// for hod 
+interface Student {
+	_id: string;
+	scholarNumber: string;
+	StudentName: string;
+	branch: string;
+	section: string;
+	batch: string;
+  }
+
+export const getStudentsByDepartment = async (department: string): Promise<Student[]> => {
+	try {
+	  const response = await local.get(`/api/hod/students?department=${department}`);
+	  toast.success("Department students fetched successfully!", {
+		toastId: "department-students-success",
+	  });
+	  return response.data;
+	} catch (error) {
+	  console.error("Error fetching department students:", error);
+	  toast.error("Failed to fetch department students", {
+		toastId: "department-students-error",
+	  });
+	  throw error;
+	}
+  };

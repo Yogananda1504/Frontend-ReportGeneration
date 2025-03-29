@@ -48,3 +48,39 @@ export const getBranches = async ():Promise<Branches[]>=>{
 	console.log("These are the available branches : ", response.data);
 	return response.data;
 }
+
+
+
+
+//FOR HOD 
+
+export const getDepartmentBranches = async (department: string): Promise<Branches[]> => {
+	try {
+	  const response = await local.get(`/api/hod/branches?department=${department}`);
+	  return response.data;
+	} catch (error) {
+	  console.error("Error fetching department branches:", error);
+	  throw error;
+	}
+  };   
+  
+   interface Professor {
+	_id: string;
+	name: string;
+	employeeCode: string;
+	department: string;
+	role?: string;
+	email?: string;
+	phone?: string;
+	abbreviation?: string;
+  }
+
+  export const getFacultyByDepartment = async (department: string): Promise<Professor[]> => {
+    try {
+      const response = await local.get(`/api/hod/faculty?department=${department}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching department faculty:", error);
+      throw error;
+    }
+  };

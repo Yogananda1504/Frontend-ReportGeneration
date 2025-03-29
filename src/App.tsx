@@ -4,8 +4,7 @@ import Login from './pages/auth/Login';
 import { useAuth } from './hooks/useAuth';
 import Dashboard from './pages/Director/dashboard/Dashboard';
 import { ToastContainer } from 'react-toastify';
-
-
+import HoDDashboard from './pages/HOD/dashboard/HodDashboard';
 // The Protected Route component is used to restrict access to certain routes based on the user's role
 // It takes the allowedRoles prop which is an array of roles that are allowed to access the route
 // If the user is not authenticated, they are redirected to the login page
@@ -48,7 +47,8 @@ function App() {
               path="hod/dashboard"
               element={
                 <ProtectedRoute allowedRoles={['HOD']}>
-                  <div>HOD Dashboard</div>
+               {/*   <div>HOD Dashboard</div>*/ }
+               <HoDDashboard/>
                 </ProtectedRoute>
               }
             />
