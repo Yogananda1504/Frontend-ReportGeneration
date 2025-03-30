@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useClassContext } from '../../context/ClassContext';
 import axios from 'axios'; // Import axios for API calls
 import { getSubjectsAccToSection } from '../../api/services/director';
-
+import { ownerIdToEmpMap } from '../../api/services/director';
 // When the user selects the Class option these fields will come up 
 const ClassFields = () => {
 	const { branches } = useClassContext();
@@ -12,6 +12,16 @@ const ClassFields = () => {
 	const [availableSections, setAvailableSections] = useState<string[]>([]);
 	const [selectedSection, setSelectedSection] = useState('');
 	const [subjects, setSubjects] = useState<{ subCode: string; subjectName: string; subjectId: string; ownerId: string }[]>([]);
+	const [ownerIdToEmpMap, setOwnerIdToEmpMap] = useState<any>([]); // Assuming this is the structure of the map
+	useEffect(() => {
+		const fetchOwnerIdToEmpMap = async () => {
+			await ownerIdToEmpMap();
+		};
+		const data = fetchOwnerIdToEmpMap();
+		if (data) {
+			setOwnerIdToEmpMap(data);
+		}
+	}, []);
 
 	// Handle branch change and update available sessions dynamically
 	const handleBranchChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -50,8 +60,8 @@ const ClassFields = () => {
 					selectedSession,
 					sectionValue
 				);
-				if (response) {
-					setSubjects(response); // Ensure subjects are correctly set
+				if (response && Array.isArray(response.subjects)) {
+					setSubjects(response.subjects); // Ensure subjects are correctly set
 				} else {
 					setSubjects([]);
 				}

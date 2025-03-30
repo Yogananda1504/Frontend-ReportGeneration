@@ -58,6 +58,12 @@ export const getSubjectsAccToSection = async(branch:string ,session:string ,sect
 	return response.data;
 }
 
+export const ownerIdToEmpMap = async()=>{
+	const response = await local.get(`/api/director/ownerIdToEmp`);
+	console.log("These are the ownerId to emp map : ", response.data);
+	return response.data;
+}
+
 local.interceptors.response.use(
 	(response) => response,
 	(error) => {
