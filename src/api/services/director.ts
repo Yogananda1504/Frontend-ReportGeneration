@@ -52,6 +52,12 @@ export const getFacultyDetails = async (employeeCode: string) => {
 	return response.data;
 };
 
+export const getSubjectsAccToSection = async(branch:string ,session:string ,section:string) => {
+	const response = await local.get(`/api/director/getSubjectsAccToSection?branch=${branch.trim()}&session=${session.trim()}&section=${section.trim()}`);
+	console.log(`These are the subjects according to the ${branch } ${section} ${session} : `, response.data);
+	return response.data;
+}
+
 local.interceptors.response.use(
 	(response) => response,
 	(error) => {

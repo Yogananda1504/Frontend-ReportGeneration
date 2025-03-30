@@ -121,20 +121,20 @@ const InputSection = ({ onSubmit, onFacultyReport, onUserTypeSelected, onFaculty
 							<Users className="w-6 h-6 mr-2" />
 							<span className="font-medium">Faculty</span>
 						</button>
-						{/* <button
+						<button
 							type="button"
 							onClick={() => {
 								setSelectedType('class');
 								onUserTypeSelected?.('class');
 							}}
 							className={`flex items-center justify-center p-4 rounded-lg border-2 transition-all ${selectedType === 'class'
-									? 'border-blue-500 bg-blue-50 text-blue-700'
-									: 'border-gray-200 hover:border-blue-200 hover:bg-gray-50'
+								? 'border-blue-500 bg-blue-50 text-blue-700'
+								: 'border-gray-200 hover:border-blue-200 hover:bg-gray-50'
 								}`}
 						>
 							<Archive className="w-6 h-6 mr-2" />
 							<span className="font-medium">Class</span>
-						</button> */}
+						</button>
 					</div>
 
 					{/* Dynamic Form Fields */}
