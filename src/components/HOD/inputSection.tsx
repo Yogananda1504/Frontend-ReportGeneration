@@ -6,7 +6,8 @@ import FacultyFields from './FacultyFields';
 import ClassFields from './classFields';
 import { useToast } from '../../context/ToastContext';
 import { getClassReport } from '../../api/services/Faculty';
-
+import { StudentOverall } from '../../api/services/hod';
+import { getStudentDetails } from '../../api/services/Student';
 export type UserType = 'student' | 'faculty' | 'class' | null;
 
 interface InputSectionProps {
@@ -16,9 +17,10 @@ interface InputSectionProps {
     onFacultyReportLoadStart?: () => void;
     onClassReport?: (reportData: any) => void;
     onClassReportLoadStart?: () => void;
+    setStudentDetails(StudentDetails : any): ()=>void;
 }
 
-const InputSection = ({ onSubmit, onFacultyReport, onUserTypeSelected, onFacultyReportLoadStart, onClassReport, onClassReportLoadStart }: InputSectionProps) => {
+const InputSection = ({ onSubmit, onFacultyReport, onUserTypeSelected, onFacultyReportLoadStart, onClassReport, onClassReportLoadStart,setStudentDetails }: InputSectionProps) => {
     const [selectedType, setSelectedType] = useState<UserType>(null);
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [studentScholarNumber, setStudentScholarNumber] = useState('');
@@ -38,13 +40,17 @@ const InputSection = ({ onSubmit, onFacultyReport, onUserTypeSelected, onFaculty
             }
 
             setIsLoading(true);
-            toast.showInfo("Fetching Student  Details...", "student-report-loading");
+            toast.showInfo("Fetching Student Overall Report...", "student-report-loading");
 
             try {
-                await onSubmit?.(studentScholarNumber, studentSemester);
-                toast.showSuccess("Student data loaded successfully", "student-report-success");
+                const overallReport = await StudentOverall(studentScholarNumber, studentSemester);
+                const studentDetails = await getStudentDetails(studentScholarNumber,studentSemester);
+                setStudentDetails(studentDetails);
+                console.log("Student Details:", studentDetails);
+                console.log("Student Overall Report:", overallReport);
+                toast.showSuccess("Student overall report loaded successfully", "student-report-success");
             } catch (error) {
-                toast.showError("Failed to fetch student details", "student-report-error");
+                toast.showError("Failed to fetch student overall report", "student-report-error");
                 console.error("Error in student submission:", error);
             } finally {
                 setIsLoading(false);

@@ -37,3 +37,4 @@ export const getTimetable = async (empCode : string) => {
         throw error;
     }
 }
+
