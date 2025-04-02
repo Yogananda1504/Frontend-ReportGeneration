@@ -60,8 +60,9 @@ export const getSubjectsAccToSection = async(branch:string ,session:string ,sect
 
 export const ownerIdToEmpMap = async()=>{
 	const response = await local.get(`/api/director/ownerIdToEmp`);
-	console.log("These are the ownerId to emp map : ", response.data);
-	return response.data;
+	console.log("These are the ownerId to emp map : ", response.data.result);
+	//The data object inturn consists of the array with the name as result so we tend to directly return it 
+	return response.data.result;
 }
 
 local.interceptors.response.use(

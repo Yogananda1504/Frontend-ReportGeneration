@@ -3,6 +3,15 @@ import { useClassContext } from '../../context/ClassContext';
 import axios from 'axios'; // Import axios for API calls
 import { getSubjectsAccToSection } from '../../api/services/director';
 import { ownerIdToEmpMap } from '../../api/services/director';
+
+// Loading spinner component for dropdown fields
+const DropdownLoader = () => (
+	<div className="flex items-center justify-center py-2">
+		<div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
+		<span className="ml-2 text-xs text-gray-500">Loading...</span>
+	</div>
+);
+
 // When the user selects the Class option these fields will come up 
 const ClassFields = () => {
 	const { branches } = useClassContext();
@@ -12,21 +21,42 @@ const ClassFields = () => {
 	const [availableSections, setAvailableSections] = useState<string[]>([]);
 	const [selectedSection, setSelectedSection] = useState('');
 	const [subjects, setSubjects] = useState<{ subCode: string; subjectName: string; subjectId: string; ownerId: string }[]>([]);
-	const [ownerIdToEmpMap, setOwnerIdToEmpMap] = useState<any>([]); // Assuming this is the structure of the map
+	const [ownerIdToEmpMapData, setOwnerIdToEmpMapData] = useState<any>([]); // Assuming this is the structure of the map
+
+	// Add loading states for each dropdown
+	const [isLoadingMap, setIsLoadingMap] = useState(false);
+	const [isLoadingSessions, setIsLoadingSessions] = useState(false);
+	const [isLoadingSections, setIsLoadingSections] = useState(false);
+	const [isLoadingSubjects, setIsLoadingSubjects] = useState(false);
+
 	useEffect(() => {
 		const fetchOwnerIdToEmpMap = async () => {
-			await ownerIdToEmpMap();
+			try {
+				setIsLoadingMap(true);
+				const data = await ownerIdToEmpMap();
+				if (data) {
+					setOwnerIdToEmpMapData(data);
+				}
+			} catch (error) {
+				console.error("Error fetching owner ID to employee map:", error);
+			} finally {
+				setIsLoadingMap(false);
+			}
 		};
-		const data = fetchOwnerIdToEmpMap();
-		if (data) {
-			setOwnerIdToEmpMap(data);
-		}
+
+		fetchOwnerIdToEmpMap();
 	}, []);
+
+	// Add separate useEffect to log when the state actually updates
+	useEffect(() => {
+		console.log("Owner ID to Emp map data updated:", ownerIdToEmpMapData);
+	}, [ownerIdToEmpMapData]);
 
 	// Handle branch change and update available sessions dynamically
 	const handleBranchChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
 		const branchValue = e.target.value;
 		setSelectedBranch(branchValue);
+		setIsLoadingSessions(true);
 
 		// Update sessions based on the selected branch
 		const branchData = branches.find((branch) => branch.branch === branchValue);
@@ -34,17 +64,20 @@ const ClassFields = () => {
 		setSelectedSession('');
 		setAvailableSections([]);
 		setSubjects([]); // Reset subjects when branch changes
+		setIsLoadingSessions(false);
 	};
 
 	// Handle session change and update available sections dynamically
 	const handleSessionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
 		const sessionValue = e.target.value;
 		setSelectedSession(sessionValue);
+		setIsLoadingSections(true);
 
 		// Update sections based on the selected session
 		const sessionData = availableSessions.find((session) => session.batch === sessionValue);
 		setAvailableSections(sessionData ? sessionData.sections : []);
 		setSubjects([]); // Reset subjects when session changes
+		setIsLoadingSections(false);
 	};
 
 	// Handle section change and fetch subjects from the backend
@@ -55,6 +88,7 @@ const ClassFields = () => {
 		// Fetch subjects based on selected branch, session, and section
 		if (selectedBranch && selectedSession && sectionValue) {
 			try {
+				setIsLoadingSubjects(true);
 				const response = await getSubjectsAccToSection(
 					selectedBranch,
 					selectedSession,
@@ -68,6 +102,8 @@ const ClassFields = () => {
 			} catch (error) {
 				console.error('Error fetching subjects:', error);
 				setSubjects([]);
+			} finally {
+				setIsLoadingSubjects(false);
 			}
 		}
 	};
@@ -81,7 +117,8 @@ const ClassFields = () => {
 					id="Branch"
 					value={selectedBranch}
 					onChange={handleBranchChange}
-					className="rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-white p-2 border text-sm"
+					className={`rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-white p-2 border text-sm ${branches.length === 0 ? 'cursor-not-allowed opacity-70' : ''}`}
+					disabled={branches.length === 0}
 				>
 					<option value="">Select Branch</option>
 					{branches.map((item) => (
@@ -90,6 +127,7 @@ const ClassFields = () => {
 						</option>
 					))}
 				</select>
+				{branches.length === 0 && <DropdownLoader />}
 			</div>
 
 			{/* Session (Dynamic based on selected branch) */}
@@ -99,7 +137,8 @@ const ClassFields = () => {
 					id="classSession"
 					value={selectedSession}
 					onChange={handleSessionChange}
-					className="rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-white p-2 border text-sm"
+					className={`rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-white p-2 border text-sm ${(isLoadingSessions || !selectedBranch) ? 'cursor-not-allowed opacity-70' : ''}`}
+					disabled={isLoadingSessions || !selectedBranch}
 				>
 					<option value="">Select Session</option>
 					{availableSessions.map((session) => (
@@ -108,6 +147,7 @@ const ClassFields = () => {
 						</option>
 					))}
 				</select>
+				{isLoadingSessions && <DropdownLoader />}
 			</div>
 
 			{/* Section (Dynamic based on selected session) */}
@@ -117,7 +157,8 @@ const ClassFields = () => {
 					id="classSection"
 					value={selectedSection}
 					onChange={handleSectionChange}
-					className="rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-white p-2 border text-sm"
+					className={`rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-white p-2 border text-sm ${(isLoadingSections || !selectedSession) ? 'cursor-not-allowed opacity-70' : ''}`}
+					disabled={isLoadingSections || !selectedSession}
 				>
 					<option value="">Select Section</option>
 					{availableSections.map((section) => (
@@ -126,6 +167,7 @@ const ClassFields = () => {
 						</option>
 					))}
 				</select>
+				{isLoadingSections && <DropdownLoader />}
 			</div>
 
 			{/* Subject (Dynamic based on selected branch, session, and section) */}
@@ -133,15 +175,17 @@ const ClassFields = () => {
 				<label htmlFor="classSubject" className="text-sm font-medium text-gray-700 mb-1">Subject</label>
 				<select
 					id="classSubject"
-					className="rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-white p-2 border text-sm"
+					className={`rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-white p-2 border text-sm ${(isLoadingSubjects || !selectedSection) ? 'cursor-not-allowed opacity-70' : ''}`}
+					disabled={isLoadingSubjects || !selectedSection}
 				>
 					<option value="">Select Subject</option>
 					{subjects.map((subject) => (
 						<option key={subject.subjectId} value={subject.subjectId}>
-							{subject.subjectName} {/* Correctly display subjectName */}
+							{subject.subjectName}
 						</option>
 					))}
 				</select>
+				{isLoadingSubjects && <DropdownLoader />}
 			</div>
 		</div>
 	);
