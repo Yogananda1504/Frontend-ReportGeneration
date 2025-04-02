@@ -112,7 +112,32 @@ const ClassFields = forwardRef((props, ref) => {
 	};
 
 	// Handle section change and fetch subjects from the backend
-	
+	const handleSectionChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+		const sectionValue = e.target.value;
+		setSelectedSection(sectionValue);
+
+		// Fetch subjects based on selected branch, session, and section
+		if (selectedBranch && selectedSession && sectionValue) {
+			try {
+				setIsLoadingSubjects(true);
+				const response = await getSubjectsAccToSection(
+					selectedBranch,
+					selectedSession,
+					sectionValue
+				);
+				if (response && Array.isArray(response.subjects)) {
+					setSubjects(response.subjects); // Ensure subjects are correctly set
+				} else {
+					setSubjects([]);
+				}
+			} catch (error) {
+				console.error('Error fetching subjects:', error);
+				setSubjects([]);
+			} finally {
+				setIsLoadingSubjects(false);
+			}
+		}
+	};
 
 	// Handle subject selection
 	const handleSubjectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {

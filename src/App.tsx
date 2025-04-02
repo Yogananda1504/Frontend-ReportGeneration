@@ -9,6 +9,7 @@ import QuickHelp from './pages/shared/QuickHelp';
 import "react-toastify/dist/ReactToastify.css";
 import { Dashboard as FacultyDashboard } from './pages/Faculty/dashboard/Dashboard';
 import { useEffect, useState } from 'react';
+import { Dashboard as HODDashboard } from './pages/HOD/dashboard/Dashboard';
 
 // The Protected Route component is used to restrict access to certain routes based on the user's role
 // It takes the allowedRoles prop which is an array of roles that are allowed to access the route
@@ -76,8 +77,8 @@ function App() {
             <Route
               path="hod/dashboard"
               element={
-                <ProtectedRoute allowedRoles={['HOD']}>
-                  <div>HOD Dashboard Component Goes Here ....</div>
+                <ProtectedRoute allowedRoles={['HOD_CSE']}>
+                  <HODDashboard />
                 </ProtectedRoute>
               }
             />
