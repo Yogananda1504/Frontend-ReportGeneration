@@ -19,9 +19,9 @@ const demoUsers = {
 	},
 	HOD: {
 		id: "2",
-		email: "hodcse@manit.ac.in",
+		email: "deepaktomar@manit.ac.in",
 		role: "HOD_CSE" as UserRole,
-		name: "Demo HOD",
+		name: "Deepak Singh Tomar",
 	},
 	DIRECTOR: {
 		id: "3",
