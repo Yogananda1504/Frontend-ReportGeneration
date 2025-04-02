@@ -5,6 +5,7 @@ import StudentFields from './StudentFields';
 import FacultyFields from './FacultyFields';
 import ClassFields from './ClassFields';
 import { useToast } from '../../context/ToastContext';
+import { getClassReport } from '../../api/services/Faculty';
 
 export type UserType = 'student' | 'faculty' | 'class' | null;
 
@@ -13,15 +14,18 @@ interface InputSectionProps {
 	onFacultyReport?: (reportData: any) => void;
 	onUserTypeSelected?: (type: UserType) => void;
 	onFacultyReportLoadStart?: () => void;
+	onClassReport?: (reportData: any) => void;
+	onClassReportLoadStart?: () => void;
 }
 
-const InputSection = ({ onSubmit, onFacultyReport, onUserTypeSelected, onFacultyReportLoadStart }: InputSectionProps) => {
+const InputSection = ({ onSubmit, onFacultyReport, onUserTypeSelected, onFacultyReportLoadStart, onClassReport, onClassReportLoadStart }: InputSectionProps) => {
 	const [selectedType, setSelectedType] = useState<UserType>(null);
 	const [isCollapsed, setIsCollapsed] = useState(false);
 	const [studentScholarNumber, setStudentScholarNumber] = useState('');
 	const [studentSemester, setStudentSemester] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
 	const facultyRef = useRef<any>(null);
+	const classRef = useRef<any>(null);
 	const toast = useToast();
 
 	const handleFormSubmit = useCallback(async () => {
@@ -60,8 +64,28 @@ const InputSection = ({ onSubmit, onFacultyReport, onUserTypeSelected, onFaculty
 				// Always reset loading state regardless of success or failure
 				setIsLoading(false);
 			}
+		} else if (selectedType === 'class') {
+			if (classRef.current && classRef.current.isFormValid()) {
+				onClassReportLoadStart?.(); // Reset class report
+				setIsLoading(true);
+				try {
+					const classData = classRef.current.getFormData();
+					console.log("Class Submission Data:", classData);
+					const classReportData = await getClassReport(classData.employeeCode, classData.subjectId, classData.branch, classData.section);
+					console.log("Class Report Data:", classReportData);
+					onClassReport?.(classReportData);
+					toast.showSuccess("Class data loaded successfully", "class-data-success");
+				} catch (error) {
+					toast.showError("Failed to process class data", "class-data-error");
+					console.error("Error in class submission:", error);
+				} finally {
+					setIsLoading(false);
+				}
+			} else {
+				toast.showError("Please fill all required fields", "class-missing-fields");
+			}
 		}
-	}, [selectedType, studentScholarNumber, studentSemester, onSubmit, onFacultyReport, isLoading, toast, onFacultyReportLoadStart]);
+	}, [selectedType, studentScholarNumber, studentSemester, onSubmit, onFacultyReport, onClassReport, onClassReportLoadStart, isLoading, toast, onFacultyReportLoadStart]);
 
 	const debouncedSubmit = useMemo(() => debounce(handleFormSubmit, 300), [handleFormSubmit]);
 
@@ -147,7 +171,7 @@ const InputSection = ({ onSubmit, onFacultyReport, onUserTypeSelected, onFaculty
 						/>
 					)}
 					{selectedType === 'faculty' && <FacultyFields ref={facultyRef} />}
-					{selectedType === 'class' && <ClassFields />}
+					{selectedType === 'class' && <ClassFields ref={classRef} />}
 
 					{/* Submit Button */}
 					{selectedType && (

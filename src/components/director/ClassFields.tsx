@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { useClassContext } from '../../context/ClassContext';
-import axios from 'axios'; // Import axios for API calls
+import axios from 'axios';
 import { getSubjectsAccToSection } from '../../api/services/director';
 import { ownerIdToEmpMap } from '../../api/services/director';
 
@@ -13,7 +13,7 @@ const DropdownLoader = () => (
 );
 
 // When the user selects the Class option these fields will come up 
-const ClassFields = () => {
+const ClassFields = forwardRef((props, ref) => {
 	const { branches } = useClassContext();
 	const [selectedBranch, setSelectedBranch] = useState('');
 	const [availableSessions, setAvailableSessions] = useState<{ batch: string; sections: string[] }[]>([]);
@@ -21,6 +21,7 @@ const ClassFields = () => {
 	const [availableSections, setAvailableSections] = useState<string[]>([]);
 	const [selectedSection, setSelectedSection] = useState('');
 	const [subjects, setSubjects] = useState<{ subCode: string; subjectName: string; subjectId: string; ownerId: string }[]>([]);
+	const [selectedSubject, setSelectedSubject] = useState('');
 	const [ownerIdToEmpMapData, setOwnerIdToEmpMapData] = useState<any>([]); // Assuming this is the structure of the map
 
 	// Add loading states for each dropdown
@@ -28,6 +29,36 @@ const ClassFields = () => {
 	const [isLoadingSessions, setIsLoadingSessions] = useState(false);
 	const [isLoadingSections, setIsLoadingSections] = useState(false);
 	const [isLoadingSubjects, setIsLoadingSubjects] = useState(false);
+
+	// Expose methods to parent component
+	useImperativeHandle(ref, () => ({
+		getFormData: () => {
+			const selectedSubjectData = subjects.find(subject => subject.subjectId === selectedSubject);
+
+			// Find the employee code for the selected subject's owner
+			let employeeCode = '';
+			if (selectedSubjectData?.ownerId && ownerIdToEmpMapData.length > 0) {
+				const ownerData = ownerIdToEmpMapData.find((item: any) =>
+					item._id === selectedSubjectData.ownerId
+				);
+				employeeCode = ownerData?.employeeCode || '';
+			}
+
+			return {
+				branch: selectedBranch,
+				session: selectedSession,
+				section: selectedSection,
+				subjectId: selectedSubject,
+				ownerId: selectedSubjectData?.ownerId || '',
+				employeeCode,
+				subjectName: selectedSubjectData?.subjectName || ''
+			};
+		},
+
+		isFormValid: () => {
+			return !!(selectedBranch && selectedSession && selectedSection && selectedSubject);
+		}
+	}));
 
 	useEffect(() => {
 		const fetchOwnerIdToEmpMap = async () => {
@@ -81,31 +112,11 @@ const ClassFields = () => {
 	};
 
 	// Handle section change and fetch subjects from the backend
-	const handleSectionChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
-		const sectionValue = e.target.value;
-		setSelectedSection(sectionValue);
+	
 
-		// Fetch subjects based on selected branch, session, and section
-		if (selectedBranch && selectedSession && sectionValue) {
-			try {
-				setIsLoadingSubjects(true);
-				const response = await getSubjectsAccToSection(
-					selectedBranch,
-					selectedSession,
-					sectionValue
-				);
-				if (response && Array.isArray(response.subjects)) {
-					setSubjects(response.subjects); // Ensure subjects are correctly set
-				} else {
-					setSubjects([]);
-				}
-			} catch (error) {
-				console.error('Error fetching subjects:', error);
-				setSubjects([]);
-			} finally {
-				setIsLoadingSubjects(false);
-			}
-		}
+	// Handle subject selection
+	const handleSubjectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+		setSelectedSubject(e.target.value);
 	};
 
 	return (
@@ -175,6 +186,8 @@ const ClassFields = () => {
 				<label htmlFor="classSubject" className="text-sm font-medium text-gray-700 mb-1">Subject</label>
 				<select
 					id="classSubject"
+					value={selectedSubject}
+					onChange={handleSubjectChange}
 					className={`rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-white p-2 border text-sm ${(isLoadingSubjects || !selectedSection) ? 'cursor-not-allowed opacity-70' : ''}`}
 					disabled={isLoadingSubjects || !selectedSection}
 				>
@@ -189,6 +202,8 @@ const ClassFields = () => {
 			</div>
 		</div>
 	);
-};
+});
+
+ClassFields.displayName = 'ClassFields';
 
 export default ClassFields;

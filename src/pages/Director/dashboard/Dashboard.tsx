@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import InputSection from '../../../components/director/InputSection';
 import StudentReport from '../../../components/Reports/student/StudentReport';
 import FacultyReport from '../../../components/Reports/faculty/FacultyReport';
+import ClassReport from '../../../components/Reports/class/ClassReport';
 import { getStudentDetails } from '../../../api/services/Student';
 import { getDepartments, getBranches } from '../../../api/services/director';
 import { DepartmentContext } from '../../../context/DepartmentContext';
@@ -18,10 +19,12 @@ interface Branch {
 function Dashboard() {
   const [showStudentReport, setShowStudentReport] = useState(false);
   const [showFacultyReport, setShowFacultyReport] = useState(false);
+  const [showClassReport, setShowClassReport] = useState(false);
   const [scholarNumber, setScholarNumber] = useState('');
   const [semester, setSemester] = useState('');
   const [studentDetails, setStudentDetails] = useState(null);
   const [facultyReportData, setFacultyReportData] = useState(null);
+  const [classReportData, setClassReportData] = useState(null);
   const [departments, setDepartments] = useState([]);
   const [professors, setProfessors] = useState<Professor[]>([]);
   const [subjects, setSubjects] = useState<Subject[]>([]);
@@ -31,8 +34,14 @@ function Dashboard() {
   const handleUserTypeSelected = (type: string | null) => {
     if (type === 'faculty') {
       setShowStudentReport(false);
+      setShowClassReport(false);
     }
     if (type === 'student') {
+      setShowFacultyReport(false);
+      setShowClassReport(false);
+    }
+    if (type === 'class') {
+      setShowStudentReport(false);
       setShowFacultyReport(false);
     }
   };
@@ -40,6 +49,11 @@ function Dashboard() {
   const handleFacultyReportLoadStart = () => {
     setFacultyReportData(null);
     setShowFacultyReport(false);
+  };
+
+  const handleClassReportLoadStart = () => {
+    setClassReportData(null);
+    setShowClassReport(false);
   };
 
   useEffect(() => {
@@ -75,6 +89,7 @@ function Dashboard() {
                         setStudentDetails(details[0]);
                         setShowStudentReport(true);
                         setShowFacultyReport(false);
+                        setShowClassReport(false);
                       } catch (error) {
                         console.error('Error fetching student details:', error);
                       } finally {
@@ -85,9 +100,17 @@ function Dashboard() {
                       setFacultyReportData(reportData);
                       setShowFacultyReport(true);
                       setShowStudentReport(false);
+                      setShowClassReport(false);
+                    }}
+                    onClassReport={(reportData) => {
+                      setClassReportData(reportData);
+                      setShowClassReport(true);
+                      setShowStudentReport(false);
+                      setShowFacultyReport(false);
                     }}
                     onUserTypeSelected={handleUserTypeSelected}
                     onFacultyReportLoadStart={handleFacultyReportLoadStart}
+                    onClassReportLoadStart={handleClassReportLoadStart}
                   />
 
                   {/* Loading State */}
@@ -113,6 +136,9 @@ function Dashboard() {
                       endDate={facultyReportData.endDate}
                       employeeCode={facultyReportData.employeeCode} // Updated prop name
                     />
+                  )}
+                  {!isLoadingReport && showClassReport && classReportData && (
+                    <ClassReport data={classReportData} />
                   )}
                 </div>
               </div>
